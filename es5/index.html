@@ -2,9 +2,11 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<script src="node_modules/@jsplumbtoolkit/browser-ui/js/jsplumbtoolkit.browser-ui.umd.js"></script>
+		<script src="../../../toolkit-6/dist/browser-ui/js/jsplumbtoolkit.browser-ui.umd.js"></script>
+
 		<link rel="stylesheet" href="node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit.css">
 		<link rel="stylesheet" href="node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit-controls.css">
+		<link rel="stylesheet" href="node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit-connector-editors.css">
 		<link rel="stylesheet" href="app.css">
 	</head>
 	<body>
@@ -15,11 +17,11 @@
 		<div class="jtk-demo-canvas">
 			<!-- controls -->
 			<div class="jtk-controls-container"></div>
-			<div class="jtk-export">
+			<div class="jtk-export jtk-controls">
 				<span>Export:</span>
-				<a href="#" id="exportSvg">SVG</a>
-				<a href="#" id="exportPng">PNG</a>
-				<a href="#" id="exportJpg">JPG</a>
+				<i><a href="#" id="exportSvg">SVG</a></i>
+				<i><a href="#" id="exportPng">PNG</a></i>
+				<i><a href="#" id="exportJpg">JPG</a></i>
 			</div>
 			<!-- miniview -->
 			<div class="miniview"></div>

@@ -250,7 +250,8 @@ jsPlumbToolkit.ready(function() {
                         type:jsPlumbToolkit.OrthogonalConnector.type,
                         options:{
                             cornerRadius: 3,
-                            alwaysRespectStubs:true
+                            alwaysRespectStubs:true,
+                            stub:50
                         }
                     },
                     // we set a css class on the edge and also on its label
@@ -347,6 +348,8 @@ jsPlumbToolkit.ready(function() {
             }
         ]
     })
+
+    window.s = renderer
 
     // handler for mode change (pan/zoom vs lasso), clear dataset, zoom to fit etc.
     new jsPlumbToolkit.ControlsComponent(controlsElement, renderer)

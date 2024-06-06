@@ -84,14 +84,22 @@ body {
 }
 
 .jtk-export {
-    left: 25px;
+    /*align-items: center;
+    font-size:11px;*/
+
+    left: 1rem;
     position: absolute;
-    top: 60px;
+    bottom: 1rem;
     z-index: 100;
+
     background-color: white;
-    padding: 0.5rem;
     border-radius: 0.25rem;
 }
+
+/*.jtk-export a {
+    text-decoration: none;
+    color:inherit;
+}*/
 
 /* ----------------------- drag/drop interactions -------------- */
 .drop-hover {
@@ -99,9 +107,6 @@ body {
 }
 
 /* ----------------------- node styles ------------------------- */
-.jtk-node svg * {
-    vector-effect: non-scaling-stroke;
-}
 
 .jtk-surface-selected-element {
     border:none !important;
@@ -151,18 +156,19 @@ body {
 }
 
 .flowchart-object .node-delete {
-    right: 4px;
-    background-color: #d83f3f;
+    right: -3px;
+    background-color: var(--jtk-draw-handle-background);
 }
 
 .flowchart-object.jtk-surface-selected-element .node-action {
     display: block;
     width: 15px;
     height: 15px;
-    top:-20px;
-    cursor:pointer;
-    line-height: 15px;
-
+    top: -20px;
+    cursor: pointer;
+    line-height: 17px;
+    border-radius: 50%;
+    font-size: smaller;
 }
 
 .flowchart-object .connect {
@@ -397,69 +403,6 @@ Applied to the drop down that lets the user pick their current shape set.
     stroke:#ddd;
 }
 
-/* ---------------------------------------------------------------------------------------------- */
-/* --------------------------- selected vertices ------------------------------ */
-/* ---------------------------------------------------------------------------------------------- */
-
-/*
-    Assigned to the element that is drawn around some other element when a drawing operation is taking place.
-*/
-.jtk-draw-skeleton {
-    position: absolute;
-    left: var(--jtk-draw-skeleton-padding);
-    right: -0.6rem;
-    top: -0.6rem;
-    bottom: -0.6rem;
-    outline: 0.125rem solid var(--jtk-component-select);
-    opacity: 0.8;
-}
-
-/*
-    Assigned to every handle (top left, top right, bottom left, bottom right, center) in a draw skeleton.
-*/
-.jtk-draw-handle {
-    position: absolute;
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius:50%;
-    background-color: var(--jtk-component-select);
-}
-
-/*
-    Assigned to the top left handle in a draw skeleton
-*/
-.jtk-draw-handle-tl {
-    left: -0.3rem;
-    top: -0.3rem;
-    cursor: nw-resize;
-}
-
-/*
-    Assigned to the top right handle in a draw skeleton
-*/
-.jtk-draw-handle-tr {
-    right: -0.3rem;
-    top: -0.3rem;
-    cursor: ne-resize;
-}
-
-/*
-    Assigned to the bottom left handle in a draw skeleton
-*/
-.jtk-draw-handle-bl {
-    left: -0.3rem;
-    bottom: -0.3rem;
-    cursor: sw-resize;
-}
-
-/*
-    Assigned to the bottom right handle in a draw skeleton
-*/
-.jtk-draw-handle-br {
-    bottom: -0.3rem;
-    right: -0.3rem;
-    cursor: se-resize;
-}
 
 .jtk-anchor-placeholder {
     z-index:13;

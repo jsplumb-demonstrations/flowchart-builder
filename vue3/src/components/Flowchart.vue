@@ -130,7 +130,8 @@
                                 type:OrthogonalConnector.type,
                                 options:{
                                     //cornerRadius: 3,
-                                    alwaysRespectStubs:true
+                                    alwaysRespectStubs:true,
+                                    stub:GRID_SIZE.w
                                 }
                             },
                             cssClass:CLASS_FLOWCHART_EDGE,

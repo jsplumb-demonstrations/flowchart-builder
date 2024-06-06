@@ -158,24 +158,25 @@ export class AppComponent implements AfterViewInit {
     },
     edges: {
       [DEFAULT]: {
-        endpoint:BlankEndpoint.type,
+        endpoint: BlankEndpoint.type,
         connector: {
-          type:OrthogonalConnector.type,
-          options:{
+          type: OrthogonalConnector.type,
+          options: {
             cornerRadius: 3,
-            alwaysRespectStubs:true
+            alwaysRespectStubs: true,
+            stub: GRID_SIZE.w
           }
         },
-        cssClass:CLASS_FLOWCHART_EDGE,
-        labelClass:CLASS_EDGE_LABEL,
-        label:"{{label}}",
-        outlineWidth:10,
+        cssClass: CLASS_FLOWCHART_EDGE,
+        labelClass: CLASS_EDGE_LABEL,
+        label: '{{label}}',
+        outlineWidth: 10,
         events: {
-          [EVENT_CLICK]:(p) => {
-            this.toolkit.setSelection(p.edge)
+          [EVENT_CLICK]: (p) => {
+            this.toolkit.setSelection(p.edge);
             this.edgeEditor.startEditing(p.edge, {
-              deleteButton:true
-            })
+              deleteButton: true
+            });
           }
         }
       }

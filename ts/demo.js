@@ -142,7 +142,8 @@ ready(() => {
                         type:OrthogonalConnector.type,
                         options:{
                             cornerRadius: 3,
-                            alwaysRespectStubs:true
+                            alwaysRespectStubs:true,
+                            stub:GRID_SIZE.w
                         }
                     },
                     // we set a css class on the edge and also on its label

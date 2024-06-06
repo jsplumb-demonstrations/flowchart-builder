@@ -111,7 +111,7 @@ export default function FlowchartComponent() {
                 connector: {
                     type: OrthogonalConnector.type,
                     options: {
-                        //cornerRadius: 5
+                        stub:GRID_SIZE.w
                     }
                 },
                 cssClass:CLASS_FLOWCHART_EDGE,
