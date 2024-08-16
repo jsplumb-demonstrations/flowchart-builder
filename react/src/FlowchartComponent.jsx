@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState} from 'react';
-import { createRoot } from "react-dom/client";
 
 import {
-    JsPlumbToolkitSurfaceComponent,
-    JsPlumbToolkitMiniviewComponent,
+    SurfaceProvider,
+    SurfaceComponent,
+    MiniviewComponent,
     ShapeLibraryPaletteComponent,
     ControlsComponent
 } from "@jsplumbtoolkit/browser-ui-react";
@@ -15,8 +15,7 @@ import { DEFAULT, EVENT_DBL_CLICK, EVENT_CLICK, EVENT_TAP,
     ShapeLibraryImpl,
     FLOWCHART_SHAPES, BASIC_SHAPES,
     SelectionModes, newInstance,
-    initializeOrthogonalConnectorEditors,
-    SvgExporterUI, ImageExporterUI, EdgePathEditor
+    initializeOrthogonalConnectorEditors
 } from "@jsplumbtoolkit/browser-ui"
 
 import Inspector from './InspectorComponent'
@@ -36,6 +35,7 @@ import {
 import edgeMappings from "./edge-mappings"
 
 import './index.css'
+import ExportComponent from "./ExportComponent";
 
 //
 // these anchor positions are used by the drag/drop of new edges, and also by the edge path editor
@@ -54,10 +54,8 @@ export default function FlowchartComponent() {
 
     const pathEditor = useRef(null)
     const surfaceComponent = useRef(null)
-    const miniviewContainer = useRef(null)
-    const controlsContainer = useRef(null)
-    const paletteContainer = useRef(null)
-    const inspectorContainer = useRef(null)
+
+    const surface = useRef(null)
 
     /**
      * Generator for data for nodes dragged from palette.
@@ -71,6 +69,9 @@ export default function FlowchartComponent() {
         }
     }
 
+    //
+    // We create a toolkit instance ourselves here, which we reference in other parts of the code.  We could instead have just
+    // passed in `modelOptions` to our `SurfaceComponent`, but then we'd have to extract a reference to the Toolkit in our useEffect.
     const toolkit = newInstance({
         // set the Toolkit's selection mode to 'isolated', meaning it can select a set of edges, or a set of nodes, but it
         // cannot select a set of nodes and edges. In this demonstration we use an inspector that responds to events from the
@@ -92,7 +93,6 @@ export default function FlowchartComponent() {
 
     initializeOrthogonalConnectorEditors()
 
-
     const view = {
         nodes: {
             [DEFAULT]: {
@@ -105,7 +105,7 @@ export default function FlowchartComponent() {
                 maxConnections: -1,
                 events: {
                     [EVENT_TAP]: (params) => {
-                        pathEditor.current.stopEditing()
+                        surface.current.stopEditingPath()
                         // if zero nodes currently selected, or the shift key wasnt pressed, make this node the only one in the selection.
                         if (toolkit.getSelection()._nodes.length < 1 || params.e.shiftKey !== true) {
                             toolkit.setSelection(params.obj)
@@ -138,7 +138,7 @@ export default function FlowchartComponent() {
                     },
                     [EVENT_CLICK]: (params) => {
                         toolkit.setSelection(params.edge)
-                        pathEditor.current.startEditing(params.edge, {
+                        surface.current.startEditingPath(params.edge, {
                             deleteButton:true
                         })
                     }
@@ -157,7 +157,7 @@ export default function FlowchartComponent() {
         events: {
             [EVENT_CANVAS_CLICK]: (e) => {
                 toolkit.clearSelection()
-                pathEditor.current.stopEditingPath()
+                surface.current.stopEditingPath()
             }
         },
         propertyMappings:{
@@ -194,75 +194,35 @@ export default function FlowchartComponent() {
         zoomToFit:true
     }
 
-    function exportSVG() {
-        new SvgExporterUI(surfaceComponent.current.surface, shapeLibrary).export({})
-    }
-
-    function exportPNG() {
-        // show an image export ui, which will default tp PNG.  `dimensions` is optional - if not supplied the resulting PNG
-        // will have the same size as the content.
-        new ImageExporterUI(surfaceComponent.current.surface, shapeLibrary).export({dimensions:[
-                { width:3000}, { width:1200}, {width:800}
-            ]})
-    }
-
-    function exportJPG() {
-        // show an image export ui targetting a JPG output. Here we show an alternative to providing a list of dimensions - we just mandate the
-        // width we want for the output. Again, this is optional. You don't need to provide this or `dimensions`. See note above.
-        new ImageExporterUI(surfaceComponent.current.surface, shapeLibrary).export({type:"image/jpeg", width:3000})
-    }
-
     // set a couple of refs and load data on "mount"
     useEffect(() => {
         if (!initialized.current) {
             initialized.current = true
-            pathEditor.current = new EdgePathEditor(surfaceComponent.current.surface, {activeMode:true})
 
-            // controls component. needs to be done here as it needs a reference to the surface.
-            const c = createRoot(controlsContainer.current)
-            c.render(<ControlsComponent surface={surfaceComponent.current.surface}/>)
+            surface.current = surfaceComponent.current.getSurface()
 
-            // a miniview.
-            const m = createRoot(miniviewContainer.current)
-            m.render(
-            <JsPlumbToolkitMiniviewComponent surface={surfaceComponent.current.surface}/>
-        );
-
-            // palette from which to drag new shapes onto the canvas
-            const slp = createRoot(paletteContainer.current)
-            slp.render(<ShapeLibraryPaletteComponent
-            surface={surfaceComponent.current.surface}
-            shapeLibrary={shapeLibrary}
-            container={paletteContainer.current}
-            dataGenerator={dataGenerator}
-            initialSet={FLOWCHART_SHAPES.id}
-            />);
-
-            // node/edge inspector.
-            const ic = createRoot(inspectorContainer.current)
-            ic.render(<Inspector surface={surfaceComponent.current.surface} container={inspectorContainer.current} edgeMappings={edgeMappings()}/>)
-
-            // load an initial dataset
-            toolkit.load({url:"/copyright.json"})
+            // load an initial dataset (we load this directly in the SurfaceComponent but you can do it this way)
+            // toolkit.load({url:"/copyright.json"})
         }
 
     }, [])
 
     return  <div style={{width:"100%",height:"100%",display:"flex"}}>
-<div className="jtk-demo-canvas">
-        <JsPlumbToolkitSurfaceComponent renderParams={renderParams} toolkit={toolkit} view={view} ref={ surfaceComponent }/>
-    <div className="controls" ref={ controlsContainer }/>
-    <div className="jtk-export">
-        <span>Export:</span>
-    <a href="#" id="exportSvg" onClick={() => exportSVG()}>SVG</a>
-    <a href="#" id="exportPng" onClick={() => exportPNG()}>PNG</a>
-    <a href="#" id="exportJpg" onClick={() => exportJPG()}>JPG</a>
-    </div>
-    <div className="miniview" ref={ miniviewContainer }/>
-    </div>
-    <div className="jtk-demo-rhs">
-        <div className="node-palette sidebar" ref={paletteContainer}></div>
-        <div ref={inspectorContainer}/>
-    </div>
-    </div>
+                <div className="jtk-demo-canvas">
+                    <SurfaceProvider>
+
+                        <SurfaceComponent renderOptions={renderParams} toolkit={toolkit} viewOptions={view} ref={ surfaceComponent } url="/copyright.json">
+                            <ControlsComponent/>
+                            <ExportComponent shapeLibrary={shapeLibrary}/>
+                            <MiniviewComponent/>
+                        </SurfaceComponent>
+
+                        <div className="jtk-demo-rhs">
+                            <ShapeLibraryPaletteComponent className="node-palette" shapeLibrary={shapeLibrary} dataGenerator={dataGenerator} initialSet={FLOWCHART_SHAPES.id}/>
+                            <Inspector edgeMappings={edgeMappings()}/>
+                        </div>
+
+                    </SurfaceProvider>
+                </div>
+        </div>
 }
