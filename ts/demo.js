@@ -116,7 +116,7 @@ ready(() => {
                             <div class="node-delete node-action delete"/>
                         </div>`,
                     // target connections to this node can exist at any of the given anchorPositions
-                    anchorPositions,
+                   anchorPositions,
                     // node can support any number of connections.
                     maxConnections: -1,
                     events: {
@@ -174,10 +174,6 @@ ready(() => {
         },
         // enable path editing
         editablePaths:true,
-        // Layout the nodes using an absolute layout
-        layout: {
-            type: AbsoluteLayout.type
-        },
         // Snap everything to a grid. This will be used for element dragging as well as resizing and also
         // by the palette that allows users to drag new nodes on to the canvas.
         grid:{
