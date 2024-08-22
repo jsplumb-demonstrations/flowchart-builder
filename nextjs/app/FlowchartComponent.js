@@ -3,25 +3,27 @@ import React, { useEffect, useRef, useState} from 'react';
 import { createRoot } from "react-dom/client";
 
 import {
-    JsPlumbToolkitSurfaceComponent,
-    JsPlumbToolkitMiniviewComponent,
+    SurfaceComponent,
+    MiniviewComponent,
     ShapeLibraryPaletteComponent,
-    ControlsComponent
+    ControlsComponent,
+    SurfaceProvider
 } from "@jsplumbtoolkit/browser-ui-react";
 
 import { DEFAULT, EVENT_DBL_CLICK, EVENT_CLICK, EVENT_TAP,
     BlankEndpoint, OrthogonalConnector,
     BackgroundPlugin, LassoPlugin, DrawingToolsPlugin,
-    AbsoluteLayout, EVENT_CANVAS_CLICK,
+    EVENT_CANVAS_CLICK,
     ShapeLibraryImpl,
     FLOWCHART_SHAPES, BASIC_SHAPES,
     SelectionModes, newInstance,
     initializeOrthogonalConnectorEditors,
-    SvgExporterUI, ImageExporterUI, EdgePathEditor
+    SvgExporterUI, ImageExporterUI
 } from "@jsplumbtoolkit/browser-ui"
 
 import Inspector from './InspectorComponent'
 import NodeComponent from './NodeComponent'
+import ExportComponent from './ExportComponent'
 
 import {
     DEFAULT_FILL,
@@ -53,12 +55,8 @@ export default function FlowchartComponent() {
     const initialized = useRef(false)
     const shapeLibrary = new ShapeLibraryImpl([FLOWCHART_SHAPES, BASIC_SHAPES])
 
-    const pathEditor = useRef(null)
     const surfaceComponent = useRef(null)
-    const miniviewContainer = useRef(null)
-    const controlsContainer = useRef(null)
-    const paletteContainer = useRef(null)
-    const inspectorContainer = useRef(null)
+    const surface = useRef(null)
 
     /**
      * Generator for data for nodes dragged from palette.
@@ -97,16 +95,14 @@ export default function FlowchartComponent() {
     const view = {
         nodes: {
             [DEFAULT]: {
-                jsx: (ctx) => {
-                    return <NodeComponent ctx={ctx}  shapeLibrary={shapeLibrary}/>
-                },
+                jsx: (ctx) => <NodeComponent ctx={ctx}/>,
                 // connections to/from this node can exist at any of the given anchorPositions
                 anchorPositions,
                 // node can support any number of connections.
                 maxConnections: -1,
                 events: {
                     [EVENT_TAP]: (params) => {
-                        pathEditor.current.stopEditing()
+                        surface.current.stopEditingPath()
                         // if zero nodes currently selected, or the shift key wasnt pressed, make this node the only one in the selection.
                         if (toolkit.getSelection()._nodes.length < 1 || params.e.shiftKey !== true) {
                             toolkit.setSelection(params.obj)
@@ -139,7 +135,7 @@ export default function FlowchartComponent() {
                     },
                     [EVENT_CLICK]: (params) => {
                         toolkit.setSelection(params.edge)
-                        pathEditor.current.startEditing(params.edge, {
+                        surface.current.startEditingPath(params.edge, {
                             deleteButton:true
                         })
                     }
@@ -149,16 +145,13 @@ export default function FlowchartComponent() {
     }
 
     const renderParams = {
-        layout:{
-            type:AbsoluteLayout.type
-        },
         grid:{
             size:GRID_SIZE
         },
         events: {
             [EVENT_CANVAS_CLICK]: (e) => {
                 toolkit.clearSelection()
-                pathEditor.current.stopEditingPath()
+                surface.current.stopEditingPath()
             }
         },
         propertyMappings:{
@@ -215,33 +208,11 @@ export default function FlowchartComponent() {
 
     // set a couple of refs and load data on "mount"
     useEffect(() => {
+
         if (!initialized.current) {
             initialized.current = true
-            pathEditor.current = new EdgePathEditor(surfaceComponent.current.surface, {activeMode:true})
 
-            // controls component. needs to be done here as it needs a reference to the surface.
-            const c = createRoot(controlsContainer.current)
-            c.render(<ControlsComponent surface={surfaceComponent.current.surface}/>)
-
-            // a miniview.
-            const m = createRoot(miniviewContainer.current)
-            m.render(
-            <JsPlumbToolkitMiniviewComponent surface={surfaceComponent.current.surface}/>
-        );
-
-            // palette from which to drag new shapes onto the canvas
-            const slp = createRoot(paletteContainer.current)
-            slp.render(<ShapeLibraryPaletteComponent
-            surface={surfaceComponent.current.surface}
-            shapeLibrary={shapeLibrary}
-            container={paletteContainer.current}
-            dataGenerator={dataGenerator}
-            initialSet={FLOWCHART_SHAPES.id}
-            />);
-
-            // node/edge inspector.
-            const ic = createRoot(inspectorContainer.current)
-            ic.render(<Inspector surface={surfaceComponent.current.surface} container={inspectorContainer.current} edgeMappings={edgeMappings()}/>)
+            surface.current = surfaceComponent.current.getSurface()
 
             // load an initial dataset
             toolkit.load({url:"/copyright.json"})
@@ -251,19 +222,20 @@ export default function FlowchartComponent() {
 
     return  <div style={{width:"100%",height:"100%",display:"flex"}}>
 <div className="jtk-demo-canvas">
-        <JsPlumbToolkitSurfaceComponent renderParams={renderParams} toolkit={toolkit} view={view} ref={ surfaceComponent }/>
-    <div className="controls" ref={ controlsContainer }/>
-    <div className="jtk-export">
-        <span>Export:</span>
-    <a href="#" id="exportSvg" onClick={() => exportSVG()}>SVG</a>
-    <a href="#" id="exportPng" onClick={() => exportPNG()}>PNG</a>
-    <a href="#" id="exportJpg" onClick={() => exportJPG()}>JPG</a>
-    </div>
-    <div className="miniview" ref={ miniviewContainer }/>
-    </div>
-    <div className="jtk-demo-rhs">
-        <div className="node-palette sidebar" ref={paletteContainer}></div>
-        <div ref={inspectorContainer}/>
+        <SurfaceProvider>
+            <SurfaceComponent shapeLibrary={shapeLibrary} renderOptions={renderParams} toolkit={toolkit} viewOptions={view} ref={ surfaceComponent }>
+                <ControlsComponent/>
+                <ExportComponent/>
+                <MiniviewComponent/>
+            </SurfaceComponent>
+
+            <div className="jtk-demo-rhs">
+                <ShapeLibraryPaletteComponent
+                    className="node-palette" dataGenerator={dataGenerator} initialSet={FLOWCHART_SHAPES.id}/>
+                <Inspector edgeMappings={edgeMappings()}/>
+            </div>
+        </SurfaceProvider>
+
     </div>
     </div>
 }
