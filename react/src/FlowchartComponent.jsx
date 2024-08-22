@@ -52,9 +52,7 @@ export default function FlowchartComponent() {
     const initialized = useRef(false)
     const shapeLibrary = new ShapeLibraryImpl([FLOWCHART_SHAPES, BASIC_SHAPES])
 
-    const pathEditor = useRef(null)
     const surfaceComponent = useRef(null)
-
     const surface = useRef(null)
 
     /**
@@ -97,7 +95,7 @@ export default function FlowchartComponent() {
         nodes: {
             [DEFAULT]: {
                 jsx: (ctx) => {
-                    return <NodeComponent ctx={ctx}  shapeLibrary={shapeLibrary}/>
+                    return <NodeComponent ctx={ctx}/>
                 },
                 // connections to/from this node can exist at any of the given anchorPositions
                 anchorPositions,
@@ -148,9 +146,6 @@ export default function FlowchartComponent() {
     }
 
     const renderParams = {
-        layout:{
-            type:AbsoluteLayout.type
-        },
         grid:{
             size:GRID_SIZE
         },
@@ -211,14 +206,19 @@ export default function FlowchartComponent() {
                 <div className="jtk-demo-canvas">
                     <SurfaceProvider>
 
-                        <SurfaceComponent renderOptions={renderParams} toolkit={toolkit} viewOptions={view} ref={ surfaceComponent } url="/copyright.json">
+                        <SurfaceComponent shapeLibrary={shapeLibrary}
+                                          renderOptions={renderParams}
+                                          toolkit={toolkit}
+                                          viewOptions={view}
+                                          ref={ surfaceComponent } url="/copyright.json">
+
                             <ControlsComponent/>
-                            <ExportComponent shapeLibrary={shapeLibrary}/>
+                            <ExportComponent/>
                             <MiniviewComponent/>
                         </SurfaceComponent>
 
                         <div className="jtk-demo-rhs">
-                            <ShapeLibraryPaletteComponent className="node-palette" shapeLibrary={shapeLibrary} dataGenerator={dataGenerator} initialSet={FLOWCHART_SHAPES.id}/>
+                            <ShapeLibraryPaletteComponent className="node-palette" dataGenerator={dataGenerator} initialSet={FLOWCHART_SHAPES.id}/>
                             <Inspector edgeMappings={edgeMappings()}/>
                         </div>
 
