@@ -1,5 +1,12 @@
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input} from "@angular/core"
-import {jsPlumbService} from "@jsplumbtoolkit/browser-ui-angular"
+import {
+    AfterViewInit,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    inject,
+    Input
+} from "@angular/core"
+import {DEFAULT_ANGULAR_SURFACE_ID, jsPlumbService} from "@jsplumbtoolkit/browser-ui-angular"
 import {Base, Inspector, Edge} from "@jsplumbtoolkit/browser-ui"
 import edgeMappings from './edge-mappings'
 
@@ -21,7 +28,7 @@ import edgeMappings from './edge-mappings'
  * `edge-type-picker` components in an inspector, with a different propertyName mapped to each one.
  */
 @Component({
-    template:`<div class="inspector">
+    template: `<div class="inspector">
         
         <div *ngIf="currentType === ''"></div>
         
@@ -48,35 +55,37 @@ import edgeMappings from './edge-mappings'
             <input type="color" jtk-att="outline"/>
         </div>
     </div>`,
-    selector:"app-inspector"
+    selector: 'app-inspector'
 })
 export class InspectorComponent implements AfterViewInit {
 
-    currentType:string = ''
+    currentType = '';
 
-    @Input() surfaceId:string
+    @Input() surfaceId: string = DEFAULT_ANGULAR_SURFACE_ID
 
-    edgeMappings = edgeMappings()
-    inspector:Inspector
+    edgeMappings = edgeMappings();
+    inspector: Inspector;
 
-    constructor(private $jsplumb:jsPlumbService, private el:ElementRef, private changeDetector:ChangeDetectorRef) { }
+    $jsplumb = inject(jsPlumbService);
+
+    constructor(private el: ElementRef, private changeDetector: ChangeDetectorRef) { }
 
     ngAfterViewInit(): void {
 
         this.$jsplumb.getSurface(this.surfaceId, (surface) => {
             this.inspector = new Inspector({
-                container:this.el.nativeElement,
+                container: this.el.nativeElement,
                 surface,
-                renderEmptyContainer:() => {
-                    this.currentType = ''
+                renderEmptyContainer: () => {
+                    this.currentType = '';
                 },
-                refresh:(obj:Base, cb:() => void) => {
-                    this.currentType = obj.objectType
-                    setTimeout(cb, 0)
-                    this.changeDetector.detectChanges()
+                refresh: (obj: Base, cb: () => void) => {
+                    this.currentType = obj.objectType;
+                    setTimeout(cb, 0);
+                    this.changeDetector.detectChanges();
                 }
-            })
-        })
+            });
+        });
     }
 
 
