@@ -4,19 +4,14 @@
     <!-- main drawing area -->
     <div class="jtk-demo-canvas">
 
-        <jsplumb-surface surfaceId="surface"
-                         toolkitId="toolkitId"
-                         [view]="view"
+        <jsplumb-surface [view]="view"
                          [renderParams]="renderParams"
-                         [toolkitParams]="toolkitParams"
-        >
-
-        </jsplumb-surface>
+                         [toolkitParams]="toolkitParams"></jsplumb-surface>
 
         <!--
             A helper component that ships in the Toolkit since 6.2.0. Provides undo/redo, zoom to fit, etc.
         -->
-        <jsplumb-controls surfaceId="surface"></jsplumb-controls>
+        <jsplumb-controls></jsplumb-controls>
 
         <div class="jtk-export">
             <span>Export:</span>
@@ -26,15 +21,16 @@
         </div>
 
         <!-- miniview -->
-        <jsplumb-miniview surfaceId="surface"></jsplumb-miniview>
+        <jsplumb-miniview></jsplumb-miniview>
     </div>
     <div class="jtk-demo-rhs">
         <!-- the node palette -->
         <div class="sidebar node-palette">
-            <jtk-shape-palette surfaceId="surface" [dataGenerator]="dataGenerator" [initialSet]="initialShapeSet"></jtk-shape-palette>
+            <jtk-shape-palette [dataGenerator]="dataGenerator" [initialSet]="initialShapeSet"></jtk-shape-palette>
         </div>
         <!-- node/edge inspector -->
-        <app-inspector surfaceId="surface"></app-inspector>
+        <app-inspector>
+        </app-inspector>
 
         <div class="description">
             <p>
