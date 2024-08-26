@@ -3,7 +3,7 @@ import {AfterViewInit, Component, ViewChild} from '@angular/core'
 import {
   AngularRenderOptions,
   jsPlumbService,
-  jsPlumbSurfaceComponent,
+  SurfaceComponent,
   BrowserUIAngular
 } from "@jsplumbtoolkit/browser-ui-angular"
 
@@ -24,11 +24,10 @@ import {
     BASIC_SHAPES,
   initializeOrthogonalConnectorEditors,
   ObjectAnchorSpec,
-    SelectionModes,
-    SvgExporterUI, ImageExporterUI
-} from "@jsplumbtoolkit/browser-ui"
+    SelectionModes
+} from '@jsplumbtoolkit/browser-ui';
 
-import edgeMappings from './edge-mappings'
+import edgeMappings from './edge-mappings';
 
 import {
   CLASS_EDGE_LABEL,
@@ -37,12 +36,12 @@ import {
   DEFAULT_STROKE, DEFAULT_TEXT_COLOR,
   GRID_BACKGROUND_OPTIONS,
   GRID_SIZE, DEFAULT_OUTLINE_WIDTH, EDGE_TYPE_TARGET_ARROW, PROPERTY_LINE_STYLE, PROPERTY_COLOR, PROPERTY_LABEL
-} from "./constants"
+} from './constants';
 
-import {NodeComponent} from "./node.component"
+import {NodeComponent} from './node.component';
 
-export const anchorPositions:Array<ObjectAnchorSpec & {id:string}> = [
-  {x:0, y:0.5, ox:-1, oy:0, id:"left" },
+export const anchorPositions:Array<ObjectAnchorSpec & {id: string}> = [
+  {x: 0, y: 0.5, ox: -1, oy: 0, id: "left" },
   {x:1, y:0.5, ox:1, oy:0, id:"right" },
   {x:0.5, y:0, ox:0, oy:-1, id:"top" },
   {x:0.5, y:1, ox:0, oy:1, id:"bottom" }
@@ -54,19 +53,19 @@ export const anchorPositions:Array<ObjectAnchorSpec & {id:string}> = [
 })
 export class AppComponent implements AfterViewInit {
 
-  @ViewChild(jsPlumbSurfaceComponent) surfaceComponent:jsPlumbSurfaceComponent;
+  @ViewChild(SurfaceComponent) surfaceComponent: SurfaceComponent;
 
-  toolkit:BrowserUIAngular
-  surface:Surface
-  edgeEditor:EdgePathEditor
+  toolkit: BrowserUIAngular;
+  surface: Surface;
+  edgeEditor: EdgePathEditor;
 
-  initialShapeSet = FLOWCHART_SHAPES.id
+  initialShapeSet = FLOWCHART_SHAPES.id;
 
-  constructor(public $jsplumb:jsPlumbService) {
-    this.$jsplumb.registerShapeLibrary([FLOWCHART_SHAPES, BASIC_SHAPES])
+  constructor(public $jsplumb: jsPlumbService) {
+    this.$jsplumb.registerShapeLibrary([FLOWCHART_SHAPES, BASIC_SHAPES]);
   }
 
-  ngAfterViewInit() {
+  ngAfterViewInit(): void {
 
     initializeOrthogonalConnectorEditors()
 
@@ -75,33 +74,33 @@ export class AppComponent implements AfterViewInit {
     this.edgeEditor = new EdgePathEditor(this.surface, { activeMode:true})
 
     this.toolkit.load({
-      url:'/assets/copyright.json'
-    })
+      url: '/assets/copyright.json'
+    });
   }
 
   /**
    * Generator for data for nodes dragged from palette.
    * @param el
    */
-  dataGenerator = (el:Element) => {
+  dataGenerator = (el: Element) => {
     return {
-      fill:DEFAULT_FILL,
-      outline:DEFAULT_STROKE,
-      textColor:DEFAULT_TEXT_COLOR,
-      outlineWidth:DEFAULT_OUTLINE_WIDTH
-    }
+      fill: DEFAULT_FILL,
+      outline: DEFAULT_STROKE,
+      textColor: DEFAULT_TEXT_COLOR,
+      outlineWidth: DEFAULT_OUTLINE_WIDTH
+    };
   }
 
-  exportSVG() {
+  exportSVG(): void {
     // use the `showSvgExportUI` method to popup the exporter window. Note that we do not need to provide a shapeLibrary
     // shapeLibraryId here, as the service will use a default shape library id if none is provided. We also did not provide an
     // id when we registered the shape library above, meaning it was registered with the default id.
     this.$jsplumb.showSvgExportUI({
-      surface:this.surface
-    })
+      surface: this.surface
+    });
   }
 
-  exportPNG() {
+  exportPNG(): void {
     // show an image export ui, which will default tp PNG.  `dimensions` is optional - if not supplied the resulting PNG
     // will have the same size as the content.
     this.$jsplumb.showImageExportUI({surface:this.surface, dimensions:[
@@ -109,7 +108,7 @@ export class AppComponent implements AfterViewInit {
         ]})
   }
 
-  exportJPG() {
+  exportJPG(): void {
     // show an image export ui targetting a JPG output. Here we show an alternative to providing a list of dimensions - we just mandate the
     // width we want for the output. Again, this is optional. You don't need to provide this or `dimensions`. See note above.
     this.$jsplumb.showImageExportUI({surface:this.surface, type:"image/jpeg", width:3000})
@@ -183,7 +182,7 @@ export class AppComponent implements AfterViewInit {
     }
   }
 
-  renderParams:AngularRenderOptions = {
+  renderParams: AngularRenderOptions = {
     // see `edge-mappings.js` for details.
     propertyMappings:{
       edgeMappings:edgeMappings()
@@ -192,8 +191,8 @@ export class AppComponent implements AfterViewInit {
     layout: {
       type: AbsoluteLayout.type
     },
-    grid:{
-      size:GRID_SIZE
+    grid: {
+      size: GRID_SIZE
     },
     events: {
       [EVENT_CANVAS_CLICK]: (e) => {
@@ -205,9 +204,9 @@ export class AppComponent implements AfterViewInit {
     dragOptions: {
       filter: ".jtk-draw-handle, .node-action, .node-action i"
     },
-    plugins:[
+    plugins: [
       {
-        type:DrawingToolsPlugin.type,
+        type: DrawingToolsPlugin.type,
         options:{
           widthAttribute:"width",
           heightAttribute:"height"
