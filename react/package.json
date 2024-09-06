@@ -1,6 +1,6 @@
 {
     "name": "flowchart-builder-react",
-    "version": "6.60.0",
+    "version": "6.70.0",
     "private": true,
     "scripts": {
         "dev": "vite",
@@ -11,7 +11,7 @@
     "dependencies": {
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
-        "@jsplumbtoolkit/browser-ui-react": "^6.60.0"
+        "@jsplumbtoolkit/browser-ui-react": "^6.70.0"
     },
     "devDependencies": {
         "@types/react": "^18.3.3",
