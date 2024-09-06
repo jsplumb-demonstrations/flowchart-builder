@@ -5,13 +5,14 @@ import {
     SurfaceComponent,
     MiniviewComponent,
     ShapeLibraryPaletteComponent,
-    ControlsComponent
+    ControlsComponent,
+    ExportControlsComponent
 } from "@jsplumbtoolkit/browser-ui-react";
 
 import { DEFAULT, EVENT_DBL_CLICK, EVENT_CLICK, EVENT_TAP,
     BlankEndpoint, OrthogonalConnector,
     BackgroundPlugin, LassoPlugin, DrawingToolsPlugin,
-    AbsoluteLayout, EVENT_CANVAS_CLICK,
+    EVENT_CANVAS_CLICK,
     ShapeLibraryImpl,
     FLOWCHART_SHAPES, BASIC_SHAPES,
     SelectionModes, newInstance,
@@ -35,7 +36,6 @@ import {
 import edgeMappings from "./edge-mappings"
 
 import './index.css'
-import ExportComponent from "./ExportComponent";
 
 //
 // these anchor positions are used by the drag/drop of new edges, and also by the edge path editor
@@ -213,7 +213,7 @@ export default function FlowchartComponent() {
                                           ref={ surfaceComponent } url="/copyright.json">
 
                             <ControlsComponent/>
-                            <ExportComponent/>
+                            <ExportControlsComponent/>
                             <MiniviewComponent/>
                         </SurfaceComponent>
 
