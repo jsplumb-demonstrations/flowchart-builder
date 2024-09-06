@@ -11,7 +11,7 @@
 <template>
     <div :style="{color:obj.textColor}" class="flowchart-object" data-jtk-target="true">
         <span>{{obj.text}}</span>
-        <jsplumb-shape :obj="obj" :shape-library="shapeLibrary"></jsplumb-shape>
+        <ShapeComponent :obj="obj" :shape-library="shapeLibrary"></ShapeComponent>
         <div v-for="anchor in anchorPositions"
              :class="'jtk-connect jtk-connect-' + anchor.id"
              :data-jtk-anchor-x="anchor.x"

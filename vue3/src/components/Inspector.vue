@@ -21,7 +21,7 @@
             <div>Label</div>
             <input type="text" jtk-att="label"/>
             <div>Line style</div>
-            <jsplumb-edge-type-picker v-bind:edgeMappings="edgeMappings" v-bind:inspector="inspector" property-name="lineStyle"/>
+            <EdgeTypePicker v-bind:edgeMappings="edgeMappings" v-bind:inspector="inspector" property-name="lineStyle"/>
             <div>Color</div>
             <input type="color" jtk-att="color"/>
         </div>
@@ -31,7 +31,7 @@
 </template>
 <script>
 
-    import {loadSurface} from "@jsplumbtoolkit/browser-ui-vue3";
+    import {loadSurface, DEFAULT_VUE_SURFACE_ID} from "@jsplumbtoolkit/browser-ui-vue3";
     import { Inspector } from "@jsplumbtoolkit/browser-ui"
 
     import { nextTick } from "vue"
@@ -44,13 +44,10 @@
             }
         },
         props:{
-            surfaceId:String,
             edgeMappings:Array
         },
         mounted() {
-            const self = this
-            loadSurface(this.surfaceId, (surface) => {
-
+            loadSurface((surface) => {
                 // create an inspector and give it the container element
                 // and the surface.
 

@@ -1,6 +1,5 @@
 <script>
 
-    import ControlsComponent from './Controls.vue'
     import InspectorComponent from './Inspector.vue'
     import NodeComponent from './Node.vue'
 
@@ -14,7 +13,7 @@
         FLOWCHART_SHAPES, BASIC_SHAPES,
         BlankEndpoint,
         OrthogonalConnector,
-        DEFAULT, findClosestPoint,
+        DEFAULT,
         EVENT_CANVAS_CLICK,
         DrawingToolsPlugin,
         LassoPlugin,
@@ -26,7 +25,7 @@
 
     } from "@jsplumbtoolkit/browser-ui"
 
-    import { loadSurface } from "@jsplumbtoolkit/browser-ui-vue3"
+    import { loadSurface, DEFAULT_VUE_SURFACE_ID } from "@jsplumbtoolkit/browser-ui-vue3"
 
     import {
         CLASS_EDGE_LABEL,
@@ -58,10 +57,10 @@
 
     export default defineComponent({
         name:"flowchart",
-        components:{ ControlsComponent, InspectorComponent },
+        components:{ InspectorComponent },
         mounted() {
 
-            loadSurface("surfaceId", (s) => {
+            loadSurface(DEFAULT_VUE_SURFACE_ID, (s) => {
                 surface = s;
                 toolkit = surface.toolkitInstance;
 
@@ -152,6 +151,9 @@
             },
             renderParams:function() {
                 return {
+                    shapes:{
+                        library:shapeLibrary
+                    },
                     layout:{
                         type:AbsoluteLayout.type
                     },
@@ -194,22 +196,6 @@
                     ],
                     zoomToFit:true
                 }
-            },
-            exportSvg:function() {
-                new SvgExporterUI(surface, shapeLibrary).export({})
-            },
-            exportPng:function() {
-                // show an image export ui, which will default tp PNG.  `dimensions` is optional - if not supplied the resulting PNG
-                // will have the same size as the content.
-                new ImageExporterUI(surface, shapeLibrary).export({
-                    dimensions:[
-                        { width:3000}, { width:1200}, {width:800}
-                    ]})
-            },
-            exportJpg:function() {
-                // show an image export ui targetting a JPG output. Here we show an alternative to providing a list of dimensions - we just mandate the
-                // width we want for the output. Again, this is optional. You don't need to provide this or `dimensions`. See note above.
-                new ImageExporterUI(surface, shapeLibrary).export({type:"image/jpeg", width:3000})
             }
         },
         data:() => {
@@ -232,38 +218,29 @@
 <template>
     <div id="app">
 
-        <ControlsComponent surface-id="surfaceId"/>
-
-        <div class="jtk-export" ref="foo">
-            <span>Export:</span>
-            <a href="#" id="exportSvg" v-on:click="exportSvg()">SVG</a>
-            <a href="#" id="exportPng" v-on:click="exportPng()">PNG</a>
-            <a href="#" id="exportJpg" v-on:click="exportJpg()">JPG</a>
-        </div>
+        <ExportControlsComponent/>
 
         <div class="jtk-demo-canvas">
 
-            <jsplumb-toolkit surface-id="surfaceId"
-                             :render-params="this.renderParams()"
-                             :view="this.viewParams()"
-                             :toolkit-params="this.toolkitParams()"
+            <SurfaceComponent :renderOptions="this.renderParams()"
+                             :viewOptions="this.viewParams()"
+                             :toolkitOptions="this.toolkitParams()"
                              url="copyright.json">
-            </jsplumb-toolkit>
+            </SurfaceComponent>
 
-            <!-- miniview -->
-            <jsplumb-miniview surface-id="surfaceId"></jsplumb-miniview>
+            <ControlsComponent/>
+            <MiniviewComponent/>
+
         </div>
         <div class="jtk-demo-rhs">
             <!-- the node palette-->
             <div class="sidebar node-palette">
-                <jsplumb-shape-palette surface-id="surfaceId"
-                                       :shape-library="shapeLibrary"
-                                       :data-generator="dataGenerator"
-                initial-set="flowchart"/>
+                <ShapePaletteComponent :data-generator="dataGenerator"
+                                       initial-set="flowchart"></ShapePaletteComponent>
             </div>
 
             <!-- node/edge inspector -->
-            <InspectorComponent surface-id="surfaceId" v-bind:edge-mappings="edgeMappings"/>
+            <InspectorComponent v-bind:edge-mappings="edgeMappings"/>
 
             <div class="description">
                 <p>

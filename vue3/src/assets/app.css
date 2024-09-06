@@ -38,22 +38,6 @@ body {
     overflow: hidden !important;
 }
 
-.jtk-export {
-    left: 25px;
-    position: absolute;
-    top: 60px;
-    z-index: 100;
-    background-color: white;
-    padding: 0.5rem;
-    border-radius: 0.25rem;
-    display:flex;
-}
-
-.jtk-export a {
-    display:inline-block;
-    margin:0 2px;
-}
-
 .jtk-demo-rhs {
     display: flex;
     flex-direction: column;
@@ -69,7 +53,7 @@ body {
     align-items: center;
 }
 
-.miniview {
+.jtk-miniview {
     position: absolute;
     top: 25px;
     right: 25px;
@@ -91,12 +75,16 @@ body {
     margin: 3px 0;
 }
 
-.jtk-controls-container {
+.jtk-controls {
     top: 25px;
     position: absolute;
     left: 25px;
     z-index: 1;
-    font-size:14px;
+}
+
+.jtk-export-controls {
+    top:auto;
+    bottom:25px;
 }
 
 
