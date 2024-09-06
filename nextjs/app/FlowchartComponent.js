@@ -1,6 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState} from 'react';
-import { createRoot } from "react-dom/client";
+import React, { useEffect, useRef } from 'react';
 
 import {
     SurfaceComponent,
@@ -18,8 +17,7 @@ import { DEFAULT, EVENT_DBL_CLICK, EVENT_CLICK, EVENT_TAP,
     ShapeLibraryImpl,
     FLOWCHART_SHAPES, BASIC_SHAPES,
     SelectionModes, newInstance,
-    initializeOrthogonalConnectorEditors,
-    SvgExporterUI, ImageExporterUI
+    initializeOrthogonalConnectorEditors
 } from "@jsplumbtoolkit/browser-ui"
 
 import Inspector from './InspectorComponent'
@@ -186,24 +184,6 @@ export default function FlowchartComponent() {
         useModelForSizes:true,
         // on load, zoom the dataset so its all visible
         zoomToFit:true
-    }
-
-    function exportSVG() {
-        new SvgExporterUI(surfaceComponent.current.surface, shapeLibrary).export({})
-    }
-
-    function exportPNG() {
-        // show an image export ui, which will default tp PNG.  `dimensions` is optional - if not supplied the resulting PNG
-        // will have the same size as the content.
-        new ImageExporterUI(surfaceComponent.current.surface, shapeLibrary).export({dimensions:[
-                { width:3000}, { width:1200}, {width:800}
-            ]})
-    }
-
-    function exportJPG() {
-        // show an image export ui targetting a JPG output. Here we show an alternative to providing a list of dimensions - we just mandate the
-        // width we want for the output. Again, this is optional. You don't need to provide this or `dimensions`. See note above.
-        new ImageExporterUI(surfaceComponent.current.surface, shapeLibrary).export({type:"image/jpeg", width:3000})
     }
 
     // set a couple of refs and load data on "mount"
