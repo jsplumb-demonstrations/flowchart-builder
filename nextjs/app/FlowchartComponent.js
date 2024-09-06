@@ -7,6 +7,7 @@ import {
     MiniviewComponent,
     ShapeLibraryPaletteComponent,
     ControlsComponent,
+    ExportControlsComponent,
     SurfaceProvider
 } from "@jsplumbtoolkit/browser-ui-react";
 
@@ -23,7 +24,6 @@ import { DEFAULT, EVENT_DBL_CLICK, EVENT_CLICK, EVENT_TAP,
 
 import Inspector from './InspectorComponent'
 import NodeComponent from './NodeComponent'
-import ExportComponent from './ExportComponent'
 
 import {
     DEFAULT_FILL,
@@ -225,7 +225,7 @@ export default function FlowchartComponent() {
         <SurfaceProvider>
             <SurfaceComponent shapeLibrary={shapeLibrary} renderOptions={renderParams} toolkit={toolkit} viewOptions={view} ref={ surfaceComponent }>
                 <ControlsComponent/>
-                <ExportComponent/>
+                <ExportControlsComponent/>
                 <MiniviewComponent/>
             </SurfaceComponent>
 
