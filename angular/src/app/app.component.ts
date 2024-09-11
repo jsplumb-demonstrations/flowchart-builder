@@ -10,7 +10,6 @@ import {
 import {
   LassoPlugin,
   DrawingToolsPlugin,
-  AbsoluteLayout,
   BackgroundPlugin,
   EVENT_TAP,
   EdgePathEditor,
@@ -22,7 +21,6 @@ import {
   EVENT_CLICK,
   FLOWCHART_SHAPES,
     BASIC_SHAPES,
-  initializeOrthogonalConnectorEditors,
   ObjectAnchorSpec,
     SelectionModes
 } from '@jsplumbtoolkit/browser-ui';
@@ -40,7 +38,7 @@ import {
 
 import {NodeComponent} from './node.component';
 
-export const anchorPositions:Array<ObjectAnchorSpec & {id: string}> = [
+export const anchorPositions: Array<ObjectAnchorSpec & {id: string}> = [
   {x: 0, y: 0.5, ox: -1, oy: 0, id: "left" },
   {x:1, y:0.5, ox:1, oy:0, id:"right" },
   {x:0.5, y:0, ox:0, oy:-1, id:"top" },
@@ -60,59 +58,6 @@ export class AppComponent implements AfterViewInit {
   edgeEditor: EdgePathEditor;
 
   initialShapeSet = FLOWCHART_SHAPES.id;
-
-  constructor(public $jsplumb: jsPlumbService) {
-    this.$jsplumb.registerShapeLibrary([FLOWCHART_SHAPES, BASIC_SHAPES]);
-  }
-
-  ngAfterViewInit(): void {
-
-    initializeOrthogonalConnectorEditors()
-
-    this.surface = this.surfaceComponent.surface
-    this.toolkit = this.surfaceComponent.toolkit
-    this.edgeEditor = new EdgePathEditor(this.surface, { activeMode:true})
-
-    this.toolkit.load({
-      url: '/assets/copyright.json'
-    });
-  }
-
-  /**
-   * Generator for data for nodes dragged from palette.
-   * @param el
-   */
-  dataGenerator = (el: Element) => {
-    return {
-      fill: DEFAULT_FILL,
-      outline: DEFAULT_STROKE,
-      textColor: DEFAULT_TEXT_COLOR,
-      outlineWidth: DEFAULT_OUTLINE_WIDTH
-    };
-  }
-
-  exportSVG(): void {
-    // use the `showSvgExportUI` method to popup the exporter window. Note that we do not need to provide a shapeLibrary
-    // shapeLibraryId here, as the service will use a default shape library id if none is provided. We also did not provide an
-    // id when we registered the shape library above, meaning it was registered with the default id.
-    this.$jsplumb.showSvgExportUI({
-      surface: this.surface
-    });
-  }
-
-  exportPNG(): void {
-    // show an image export ui, which will default tp PNG.  `dimensions` is optional - if not supplied the resulting PNG
-    // will have the same size as the content.
-    this.$jsplumb.showImageExportUI({surface:this.surface, dimensions:[
-            { width:3000}, { width:1200}, {width:800}
-        ]})
-  }
-
-  exportJPG(): void {
-    // show an image export ui targetting a JPG output. Here we show an alternative to providing a list of dimensions - we just mandate the
-    // width we want for the output. Again, this is optional. You don't need to provide this or `dimensions`. See note above.
-    this.$jsplumb.showImageExportUI({surface:this.surface, type:"image/jpeg", width:3000})
-  }
 
   toolkitParams = {
     // set the Toolkit's selection mode to 'isolated', meaning it can select a set of edges, or a set of nodes, but it
@@ -187,10 +132,6 @@ export class AppComponent implements AfterViewInit {
     propertyMappings:{
       edgeMappings:edgeMappings()
     },
-    // Layout the nodes using an absolute layout
-    layout: {
-      type: AbsoluteLayout.type
-    },
     grid: {
       size: GRID_SIZE
     },
@@ -205,18 +146,11 @@ export class AppComponent implements AfterViewInit {
       filter: ".jtk-draw-handle, .node-action, .node-action i"
     },
     plugins: [
-      {
-        type: DrawingToolsPlugin.type,
-        options:{
-          widthAttribute:"width",
-          heightAttribute:"height"
-        }
-      },
+        DrawingToolsPlugin.type,
       {
         type:LassoPlugin.type,
         options: {
-          lassoInvert:true,
-          lassoEdges:true
+          invert:true
         }
       },
       {
@@ -227,5 +161,59 @@ export class AppComponent implements AfterViewInit {
     useModelForSizes:true,
     zoomToFit:true
   }
+
+  constructor(public $jsplumb: jsPlumbService) {
+    this.$jsplumb.registerShapeLibrary([FLOWCHART_SHAPES, BASIC_SHAPES]);
+  }
+
+  ngAfterViewInit(): void {
+
+
+    this.surface = this.surfaceComponent.surface
+    this.toolkit = this.surfaceComponent.toolkit
+    this.edgeEditor = new EdgePathEditor(this.surface, { activeMode:true})
+
+    this.toolkit.load({
+      url: '/assets/copyright.json'
+    });
+  }
+
+  /**
+   * Generator for data for nodes dragged from palette.
+   * @param el Element from which to extract a payload.
+   */
+  dataGenerator = (el: Element) => {
+    return {
+      fill: DEFAULT_FILL,
+      outline: DEFAULT_STROKE,
+      textColor: DEFAULT_TEXT_COLOR,
+      outlineWidth: DEFAULT_OUTLINE_WIDTH
+    };
+  }
+
+  exportSVG(): void {
+    // use the `showSvgExportUI` method to popup the exporter window. Note that we do not need to provide a shapeLibrary
+    // shapeLibraryId here, as the service will use a default shape library id if none is provided. We also did not provide an
+    // id when we registered the shape library above, meaning it was registered with the default id.
+    this.$jsplumb.showSvgExportUI({
+      surface: this.surface
+    });
+  }
+
+  exportPNG(): void {
+    // show an image export ui, which will default tp PNG.  `dimensions` is optional - if not supplied the resulting PNG
+    // will have the same size as the content.
+    this.$jsplumb.showImageExportUI({surface:this.surface, dimensions:[
+            { width:3000}, { width:1200}, {width:800}
+        ]})
+  }
+
+  exportJPG(): void {
+    // show an image export ui targetting a JPG output. Here we show an alternative to providing a list of dimensions - we just mandate the
+    // width we want for the output. Again, this is optional. You don't need to provide this or `dimensions`. See note above.
+    this.$jsplumb.showImageExportUI({surface:this.surface, type:"image/jpeg", width:3000})
+  }
+
+
 
 }
