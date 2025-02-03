@@ -1,9 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit.css";
-@import "../node_modules/@jsplumbtoolkit/browser-ui-angular/css/jsplumbtoolkit-angular.css";
 @import "../node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit-connector-editors.css";
 @import "../node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit-controls.css";
 @import './app.css';
+
 
 jtk-shape {
   width: 100%;
@@ -13,6 +13,7 @@ jtk-shape {
 }
 
 jsplumb-surface {
+  display:block;
   width:100%;
   height:100%;
 }
@@ -23,6 +24,7 @@ jsplumb-surface {
 }
 
 jsplumb-miniview {
+  display:block;
   position:absolute;
   top:2rem;
   right:2rem;
@@ -33,6 +35,7 @@ jsplumb-miniview {
 }
 
 jsplumb-controls {
+  display:block;
   position:absolute;
 }
 
