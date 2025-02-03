@@ -310,9 +310,9 @@ svg.jtk-drag-drop-hover path {
 }
 
 /**
-  Show connect elements on hover
+  Show connect elements on hover, but not if the element is being dragged
  */
-.jtk-node:hover .jtk-connect, .jtk-drag-selected .jtk-connect, .jtk-surface-touch-device .jtk-connect {
+.jtk-node:not(.jtk-drag):hover .jtk-connect, .jtk-drag-selected .jtk-connect, .jtk-surface-touch-device .jtk-connect {
     display: flex;
 }
 
