@@ -14,14 +14,14 @@ import {
   EVENT_TAP,
   Surface,
   DEFAULT,
-  BlankEndpoint,
   OrthogonalConnector,
   EVENT_CANVAS_CLICK,
   EVENT_CLICK,
   FLOWCHART_SHAPES,
     BASIC_SHAPES,
   ObjectAnchorSpec,
-  SelectionModes
+  SelectionModes,
+  LabelOverlay, consume
 } from '@jsplumbtoolkit/browser-ui';
 
 import edgeMappings from './edge-mappings';
@@ -36,6 +36,7 @@ import {
 } from './constants';
 
 import {NodeComponent} from './node.component';
+
 
 export const anchorPositions: Array<ObjectAnchorSpec & {id: string}> = [
   {x: 0, y: 0.5, ox: -1, oy: 0, id: "left" },
@@ -113,14 +114,40 @@ export class AppComponent implements AfterViewInit {
           }
         },
         cssClass: CLASS_FLOWCHART_EDGE,
-        labelClass: CLASS_EDGE_LABEL,
-        label: '{{label}}',
         outlineWidth: 10,
         events: {
           [EVENT_CLICK]: (p) => {
-            this.toolkit.setSelection(p.edge);
+            if (!p.e.defaultPrevented) {
+              this.toolkit.setSelection(p.edge)
+            }
           }
-        }
+        },
+        overlays:[
+          {
+            type:LabelOverlay.type,
+            options:{
+              useHTMLElement:false,
+              cssClass:CLASS_EDGE_LABEL,
+              label:"{{label}}",
+              location:0.5
+            }
+          },
+          {
+            type:LabelOverlay.type,
+            options:{
+              useHTMLElement:false,
+              label:"✖",
+              cssClass:"jtk-flowchart-edge-delete",
+              location:0.2,
+              events:{
+                click:(e) => {
+                  consume(e.e)
+                  this.toolkit.removeEdge(e.edge)
+                }
+              }
+            }
+          }
+        ]
       }
     }
   }

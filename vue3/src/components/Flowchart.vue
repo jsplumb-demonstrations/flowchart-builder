@@ -7,7 +7,6 @@
 
     import {
         AbsoluteLayout,
-        initializeOrthogonalConnectorEditors,
         EVENT_TAP,
         EdgePathEditor,
         FLOWCHART_SHAPES, BASIC_SHAPES,
@@ -21,7 +20,9 @@
         ShapeLibraryImpl,
         SelectionModes,
         SvgExporterUI,
-        ImageExporterUI
+        ImageExporterUI,
+        LabelOverlay,
+        consume
 
     } from "@jsplumbtoolkit/browser-ui"
 
@@ -42,9 +43,6 @@
 
     let toolkit
     let surface
-    let edgeEditor
-
-    let foo
 
     const shapeLibrary = new ShapeLibraryImpl([FLOWCHART_SHAPES, BASIC_SHAPES])
 
@@ -65,10 +63,6 @@
                 toolkit = surface.toolkitInstance;
 
                 window.tk = toolkit
-
-                edgeEditor = new EdgePathEditor(surface, { activeMode:true})
-
-                initializeOrthogonalConnectorEditors()
 
             })
 
@@ -100,13 +94,10 @@
                     nodes:{
                         default:{
                             component:NodeComponent,
-                            // target connections to this node can exist at any of the given anchorPositions
-                            anchorPositions,
                             // node can support any number of connections.
                             maxConnections: -1,
                             events: {
                                 [EVENT_TAP]: (params) => {
-                                    edgeEditor.stopEditing()
                                     // if zero nodes currently selected, or the shift key wasnt pressed, make this node the only one in the selection.
                                     if (toolkit.getSelection()._nodes.length < 1 || params.e.shiftKey !== true) {
                                         toolkit.setSelection(params.obj)
@@ -124,27 +115,50 @@
                     },
                     edges: {
                         [DEFAULT]: {
-                            endpoint:BlankEndpoint.type,
                             connector: {
                                 type:OrthogonalConnector.type,
                                 options:{
-                                    //cornerRadius: 3,
+                                    cornerRadius: 3,
                                     alwaysRespectStubs:true,
                                     stub:GRID_SIZE.w
                                 }
                             },
                             cssClass:CLASS_FLOWCHART_EDGE,
-                            labelClass:CLASS_EDGE_LABEL,
-                            label:"{{label}}",
+
                             outlineWidth:10,
                             events: {
                                 click:(p) => {
-                                    toolkit.setSelection(p.edge)
-                                    edgeEditor.startEditing(p.edge, {
-                                        deleteButton:true
-                                    })
+                                    if (!p.e.defaultPrevented) {
+                                        toolkit.setSelection(p.edge)
+                                    }
                                 }
-                            }
+                            },
+                            overlays:[
+                                {
+                                    type:LabelOverlay.type,
+                                    options:{
+                                        useHTMLElement:false,
+                                        cssClass:CLASS_EDGE_LABEL,
+                                        label:"{{label}}",
+                                        location:0.5
+                                    }
+                                },
+                                {
+                                    type:LabelOverlay.type,
+                                    options:{
+                                        useHTMLElement:false,
+                                        label:"✖",
+                                        cssClass:"jtk-flowchart-edge-delete",
+                                        location:0.2,
+                                        events:{
+                                            click:(e) => {
+                                                consume(e.e)
+                                                toolkit.removeEdge(e.edge)
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -154,16 +168,12 @@
                     shapes:{
                         library:shapeLibrary
                     },
-                    layout:{
-                        type:AbsoluteLayout.type
-                    },
                     grid:{
                         size:GRID_SIZE
                     },
                     events: {
                         [EVENT_CANVAS_CLICK]: (e) => {
                             toolkit.clearSelection()
-                            edgeEditor.stopEditing()
                         }
                     },
                     propertyMappings:{
@@ -172,16 +182,10 @@
                     useModelForSizes:true,
                     consumeRightClick: false,
                     dragOptions: {
-                        filter: ".jtk-draw-handle, .node-action, .node-action i"
+                        filter: ".node-action, .node-action i"
                     },
                     plugins:[
-                        {
-                            type:DrawingToolsPlugin.type,
-                            options:{
-                                widthAttribute:"width",
-                                heightAttribute:"height"
-                            }
-                        },
+                        DrawingToolsPlugin.type,
                         {
                             type:LassoPlugin.type,
                             options: {
@@ -194,7 +198,14 @@
                             options:GRID_BACKGROUND_OPTIONS
                         }
                     ],
-                    zoomToFit:true
+                    zoomToFit:true,
+                    defaults:{
+                        edgesAvoidVertices:true
+                    },
+                    magnetize:{
+                        constant:true,
+                        trackback:true
+                    }
                 }
             }
         },

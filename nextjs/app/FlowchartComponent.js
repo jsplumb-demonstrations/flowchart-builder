@@ -10,14 +10,14 @@ import {
     SurfaceProvider
 } from "@jsplumbtoolkit/browser-ui-react";
 
-import { DEFAULT, EVENT_DBL_CLICK, EVENT_CLICK, EVENT_TAP,
+import { DEFAULT, EVENT_CLICK, EVENT_TAP,
     BlankEndpoint, OrthogonalConnector,
     BackgroundPlugin, LassoPlugin, DrawingToolsPlugin,
     EVENT_CANVAS_CLICK,
     ShapeLibraryImpl,
     FLOWCHART_SHAPES, BASIC_SHAPES,
     SelectionModes, newInstance,
-    initializeOrthogonalConnectorEditors
+    initializeOrthogonalConnectorEditors, LabelOverlay
 } from "@jsplumbtoolkit/browser-ui"
 
 import Inspector from './InspectorComponent'
@@ -68,7 +68,7 @@ export default function FlowchartComponent() {
         }
     }
 
-    const toolkit = newInstance({
+    const toolkit = useRef(newInstance({
         // set the Toolkit's selection mode to 'isolated', meaning it can select a set of edges, or a set of nodes, but it
         // cannot select a set of nodes and edges. In this demonstration we use an inspector that responds to events from the
         // toolkit's selection, so setting this to `isolated` helps us ensure we dont try to inspect edges and nodes at the same
@@ -85,7 +85,7 @@ export default function FlowchartComponent() {
                 [PROPERTY_LINE_STYLE]:EDGE_TYPE_TARGET_ARROW
             }
         }
-    })
+    }))
 
     initializeOrthogonalConnectorEditors()
 
@@ -94,19 +94,17 @@ export default function FlowchartComponent() {
         nodes: {
             [DEFAULT]: {
                 jsx: (ctx) => <NodeComponent ctx={ctx}/>,
-                // connections to/from this node can exist at any of the given anchorPositions
-                anchorPositions,
                 // node can support any number of connections.
                 maxConnections: -1,
                 events: {
                     [EVENT_TAP]: (params) => {
                         surface.current.stopEditingPath()
                         // if zero nodes currently selected, or the shift key wasnt pressed, make this node the only one in the selection.
-                        if (toolkit.getSelection()._nodes.length < 1 || params.e.shiftKey !== true) {
-                            toolkit.setSelection(params.obj)
+                        if (toolkit.current.getSelection()._nodes.length < 1 || params.e.shiftKey !== true) {
+                            toolkit.current.setSelection(params.obj)
                         } else {
                             // if multiple nodes already selected, or shift was pressed, add this node to the current selection.
-                            toolkit.addToSelection(params.obj)
+                            toolkit.current.addToSelection(params.obj)
                         }
                     }
                 }
@@ -116,7 +114,6 @@ export default function FlowchartComponent() {
         // parent.
         edges: {
             [DEFAULT]: {
-                endpoint: BlankEndpoint.type,
                 connector: {
                     type: OrthogonalConnector.type,
                     options: {
@@ -124,20 +121,40 @@ export default function FlowchartComponent() {
                     }
                 },
                 cssClass:CLASS_FLOWCHART_EDGE,
-                labelClass:CLASS_EDGE_LABEL,
-                label:"{{label}}",
                 outlineWidth:10,
                 events: {
-                    [EVENT_DBL_CLICK]: (params) => {
-                        toolkit.removeEdge(params.edge)
-                    },
                     [EVENT_CLICK]: (params) => {
-                        toolkit.setSelection(params.edge)
-                        surface.current.startEditingPath(params.edge, {
-                            deleteButton:true
-                        })
+                        if (!params.e.defaultPrevented) {
+                            toolkit.current.setSelection(params.edge)
+                        }
                     }
-                }
+                },
+                overlays:[
+                    {
+                        type:LabelOverlay.type,
+                        options:{
+                            useHTMLElement:false,
+                            cssClass:CLASS_EDGE_LABEL,
+                            label:"{{label}}",
+                            location:0.5
+                        }
+                    },
+                    {
+                        type:LabelOverlay.type,
+                        options:{
+                            useHTMLElement:false,
+                            label:"✖",
+                            cssClass:"jtk-flowchart-edge-delete",
+                            location:0.2,
+                            events:{
+                                click:(e) => {
+                                    consume(e.e)
+                                    toolkit.current.removeEdge(e.edge)
+                                }
+                            }
+                        }
+                    }
+                ]
             }
         }
     }
@@ -148,26 +165,18 @@ export default function FlowchartComponent() {
         },
         events: {
             [EVENT_CANVAS_CLICK]: (e) => {
-                toolkit.clearSelection()
-                surface.current.stopEditingPath()
+                toolkit.current.clearSelection()
             }
         },
         propertyMappings:{
             edgeMappings:edgeMappings()
         },
-        editablePaths:true,
         consumeRightClick: false,
         dragOptions: {
-            filter: ".jtk-draw-handle, .node-action, .node-action i"
+            filter: ".node-action, .node-action i"
         },
         plugins:[
-            {
-                type:DrawingToolsPlugin.type,
-                options:{
-                    widthAttribute:"width",
-                    heightAttribute:"height"
-                }
-            },
+            DrawingToolsPlugin.type,
             {
                 type:LassoPlugin.type,
                 options: {
@@ -183,7 +192,14 @@ export default function FlowchartComponent() {
         // set the size of elements from the width/height values in their backing data
         useModelForSizes:true,
         // on load, zoom the dataset so its all visible
-        zoomToFit:true
+        zoomToFit:true,
+        defaults:{
+            edgesAvoidVertices:true
+        },
+        magnetize:{
+            constant:true,
+            trackback:true
+        }
     }
 
     // set a couple of refs and load data on "mount"
@@ -195,7 +211,7 @@ export default function FlowchartComponent() {
             surface.current = surfaceComponent.current.getSurface()
 
             // load an initial dataset
-            toolkit.load({url:"/copyright.json"})
+            toolkit.current.load({url:"/copyright.json"})
         }
 
     }, [])
@@ -203,7 +219,7 @@ export default function FlowchartComponent() {
     return  <div style={{width:"100%",height:"100%",display:"flex"}}>
 <div className="jtk-demo-canvas">
         <SurfaceProvider>
-            <SurfaceComponent shapeLibrary={shapeLibrary} renderOptions={renderParams} toolkit={toolkit} viewOptions={view} ref={ surfaceComponent }>
+            <SurfaceComponent shapeLibrary={shapeLibrary} renderOptions={renderParams} toolkit={toolkit.current} viewOptions={view} ref={ surfaceComponent }>
                 <ControlsComponent/>
                 <ExportControlsComponent/>
                 <MiniviewComponent/>

@@ -6,18 +6,16 @@ import {
     OrthogonalConnector,
     BlankEndpoint,
     DEFAULT, EVENT_TAP,
-    EdgePathEditor,
     LassoPlugin,
     DrawingToolsPlugin,
     MiniviewPlugin,
     EVENT_CANVAS_CLICK,
-    AbsoluteLayout,
     initializeOrthogonalConnectorEditors,
     BackgroundPlugin,
     SelectionModes,
     ShapeLibraryImpl, ShapeLibraryPalette,
     FLOWCHART_SHAPES,
-    BASIC_SHAPES, ControlsComponent, SnaplinesPlugin
+    BASIC_SHAPES, ControlsComponent, ExportControlsComponent, LabelOverlay, consume
 } from "@jsplumbtoolkit/browser-ui"
 
 import edgeMappings from './edge-mappings'
@@ -39,7 +37,6 @@ import {
 
 import {FlowchartBuilderInspector} from "./flowchart-inspector";
 
-import {SvgExporterUI, ImageExporterUI} from "@jsplumbtoolkit/browser-ui";
 
 // this call ensures that the esbuild does not tree-shake the orthogonal connector editors out.
 initializeOrthogonalConnectorEditors()
@@ -62,7 +59,8 @@ ready(() => {
         miniviewElement = mainElement.querySelector(".miniview"),
         nodePaletteElement = mainElement.querySelector(".node-palette"),
         controlsElement = mainElement.querySelector(".jtk-controls-container"),
-        inspectorElement = mainElement.querySelector(".inspector")
+        inspectorElement = mainElement.querySelector(".inspector"),
+        exportControlsElement = mainElement.querySelector(".jtk-export")
 
     // Declare an instance of the Toolkit and supply a beforeStartConnect interceptor, used
     // to provide an initial payload on connection drag.
@@ -101,6 +99,10 @@ ready(() => {
             showLabels:true,
             labelAttribute:"text"
         },
+        magnetize:{
+            constant:true,
+            trackback:true
+        },
         view: {
             nodes: {
                 [DEFAULT]:{
@@ -115,14 +117,10 @@ ready(() => {
                             ${anchorPositions.map(ap => `<div class="jtk-connect jtk-connect-${ap.id}"  data-jtk-anchor-x="${ap.x}" data-jtk-anchor-y="${ap.y}" data-jtk-orientation-x="${ap.ox}"  data-jtk-orientation-y="${ap.oy}" data-jtk-source="true"></div>`).join("\n")}
                             <div class="node-delete node-action delete"/>
                         </div>`,
-                    // target connections to this node can exist at any of the given anchorPositions
-                   anchorPositions,
                     // node can support any number of connections.
                     maxConnections: -1,
                     events: {
                         [EVENT_TAP]: (params) => {
-                            // cancel any edge edits when the user taps a node.
-                            renderer.stopEditingPath()
                             // if zero nodes currently selected, or the shift key wasnt pressed, make this node the only one in the selection.
                             if (toolkit.getSelection()._nodes.length < 1 || params.e.shiftKey !== true) {
                                 toolkit.setSelection(params.obj)
@@ -136,8 +134,7 @@ ready(() => {
             },
             edges: {
                 [DEFAULT]: {
-                    // Our edge uses a Blank endpoint and an Orthogonal connector.
-                    endpoint:BlankEndpoint.type,
+                    // Our edge uses a Blank endpoint (which is the default) and an Orthogonal connector.
                     connector: {
                         type:OrthogonalConnector.type,
                         options:{
@@ -149,20 +146,45 @@ ready(() => {
                     // we set a css class on the edge and also on its label
                     cssClass:CLASS_FLOWCHART_EDGE,
                     labelClass:CLASS_EDGE_LABEL,
-                    // This says 'extract `label` from the edge data and use it as the edge's label'.
-                    label:"{{label}}",
+
                     // a large outlineWidth helps with selection via the mouse.
                     outlineWidth:10,
                     events: {
                         click:(p) => {
                             // on edge click, select the edge (the inspector will update to
-                            // show this edge), and start editing it
-                            toolkit.setSelection(p.edge)
-                            renderer.startEditingPath(p.edge, {
-                                deleteButton:true
-                            })
+                            // show this edge). note we check for default prevented, in case the user clicked the
+                            // delete overlay.
+                            if (!p.e.defaultPrevented) {
+                                toolkit.setSelection(p.edge)
+                            }
                         }
-                    }
+                    },
+                    overlays:[
+                        {
+                            type:LabelOverlay.type,
+                            options:{
+                                useHTMLElement:false,
+                                cssClass:CLASS_EDGE_LABEL,
+                                label:"{{label}}",
+                                location:0.5
+                            }
+                        },
+                        {
+                            type:LabelOverlay.type,
+                            options:{
+                                useHTMLElement:false,
+                                label:"✖",
+                                cssClass:"jtk-flowchart-edge-delete",
+                                location:0.2,
+                                events:{
+                                    click:(e) => {
+                                        consume(e.e)
+                                        toolkit.removeEdge(e.edge)
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 }
             }
         },
@@ -172,8 +194,6 @@ ready(() => {
         propertyMappings:{
             edgeMappings:edgeMappings()
         },
-        // enable path editing
-        editablePaths:true,
         // Snap everything to a grid. This will be used for element dragging as well as resizing and also
         // by the palette that allows users to drag new nodes on to the canvas.
         grid:{
@@ -192,7 +212,10 @@ ready(() => {
         // a selector identifying which parts of each node should not cause the element to be dragged.
         // typically here you'd list such things as buttons etc.
         dragOptions: {
-            filter: ".jtk-draw-handle, .node-action, .node-action i"
+            filter: ".node-action, .node-action i"
+        },
+        defaults:{
+            edgesAvoidVertices:true
         },
         plugins:[
             // add a miniview plugin.
@@ -203,13 +226,7 @@ ready(() => {
                 }
             },
             // this plugin allows the user to resize elements.
-            {
-                type:DrawingToolsPlugin.type,
-                options:{
-                    widthAttribute:"width",
-                    heightAttribute:"height"
-                }
-            },
+            DrawingToolsPlugin.type,
             // select multiple elements with a lasso
             {
                 type:LassoPlugin.type,
@@ -222,8 +239,7 @@ ready(() => {
             {
                 type:BackgroundPlugin.type,
                 options:GRID_BACKGROUND_OPTIONS
-            },
-            SnaplinesPlugin.type
+            }
         ],
         modelEvents:[
             // catch the TAP event on the delete buttons inside nodes and remove the node from the model.
@@ -239,11 +255,19 @@ ready(() => {
 
     // handler for mode change (pan/zoom vs lasso), clear dataset, zoom to fit etc.
     new ControlsComponent(controlsElement, renderer)
+    // buttons for svg/png/jpg export
+    new ExportControlsComponent(exportControlsElement, renderer, {
+        margins: {x: 50, y: 50},
+        imageOptions: {
+            dimensions: [
+                {width: 3000}, {width: 1200}, {width: 800}
+            ]
+        }
+    })
 
     // the palette displays a list of shapes that can be dragged on to the canvas
     new ShapeLibraryPalette ({
         container:nodePaletteElement,
-        shapeLibrary,
         initialSet:FLOWCHART_SHAPES.id,
         surface:renderer,
         dataGenerator:(el) => {
@@ -262,6 +286,7 @@ ready(() => {
         surface:renderer
     })
 
+
     // Load the data.
     toolkit.load({
         url: `./copyright.json?q=${uuid()}`,
@@ -270,26 +295,7 @@ ready(() => {
         }
     })
 
-    document.querySelector("#exportSvg").addEventListener("click", () => {
-        const x = new SvgExporterUI(renderer, shapeLibrary)
-        x.export({margins: {x: 50, y: 50}})
-    })
 
-    document.querySelector("#exportPng").addEventListener("click", () => {
-        // show an image export ui, which will default tp PNG.  `dimensions` is optional - if not supplied the resulting PNG
-        // will have the same size as the content.
-        const x = new ImageExporterUI(renderer, shapeLibrary)
-        x.export({margins: {x: 50, y: 50}, dimensions:[
-                { width:3000}, { width:1200}, {width:800}
-            ]})
-    })
-
-    document.querySelector("#exportJpg").addEventListener("click", () => {
-        // show an image export ui targetting a JPG output. Here we show an alternative to providing a list of dimensions - we just mandate the
-        // width we want for the output. Again, this is optional. You don't need to provide this or `dimensions`. See note above.
-        const x = new ImageExporterUI(renderer, shapeLibrary)
-        x.export({margins: {x: 50, y: 50}, type:"image/jpeg", width:3000})
-    })
 
 })
 

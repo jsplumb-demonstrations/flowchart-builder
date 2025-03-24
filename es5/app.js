@@ -209,6 +209,13 @@ jsPlumbToolkit.ready(function() {
             showLabels:true,
             labelAttribute:"text"
         },
+        defaults:{
+            edgesAvoidVertices:true,
+        },
+        magnetize:{
+            constant:true,
+            trackback:true
+        },
         view: {
             nodes: {
                 [jsPlumbToolkit.DEFAULT]:{
@@ -223,14 +230,10 @@ jsPlumbToolkit.ready(function() {
                             ${anchorPositions.map(ap => `<div class="jtk-connect jtk-connect-${ap.id}"  data-jtk-anchor-x="${ap.x}" data-jtk-anchor-y="${ap.y}" data-jtk-orientation-x="${ap.ox}"  data-jtk-orientation-y="${ap.oy}" data-jtk-source="true"></div>`).join("\n")}
                             <div class="node-delete node-action delete"/>
                         </div>`,
-                    // target connections to this node can exist at any of the given anchorPositions
-                    anchorPositions,
                     // node can support any number of connections.
                     maxConnections: -1,
                     events: {
                         [jsPlumbToolkit.EVENT_TAP]: (params) => {
-                            // cancel any edge edits when the user taps a node.
-                            renderer.stopEditingPath()
                             // if zero nodes currently selected, or the shift key wasnt pressed, make this node the only one in the selection.
                             if (toolkit.getSelection()._nodes.length < 1 || params.e.shiftKey !== true) {
                                 toolkit.setSelection(params.obj)
@@ -245,7 +248,6 @@ jsPlumbToolkit.ready(function() {
             edges: {
                 [jsPlumbToolkit.DEFAULT]: {
                     // Our edge uses a Blank endpoint and an Orthogonal connector.
-                    endpoint:jsPlumbToolkit.BlankEndpoint.type,
                     connector: {
                         type:jsPlumbToolkit.OrthogonalConnector.type,
                         options:{
@@ -256,19 +258,42 @@ jsPlumbToolkit.ready(function() {
                     },
                     // we set a css class on the edge and also on its label
                     cssClass:CLASS_FLOWCHART_EDGE,
-                    labelClass:CLASS_EDGE_LABEL,
-                    // This says 'extract `label` from the edge data and use it as the edge's label'.
-                    label:"{{label}}",
+                    overlays:[
+                        {
+                            type:jsPlumbToolkit.LabelOverlay.type,
+                            options:{
+                                useHTMLElement:false,
+                                cssClass:CLASS_EDGE_LABEL,
+                                label:"{{label}}",
+                                location:0.5
+                            }
+                        },
+                        {
+                            type:jsPlumbToolkit.LabelOverlay.type,
+                            options:{
+                                useHTMLElement:false,
+                                label:"✖",
+                                cssClass:"jtk-flowchart-edge-delete",
+                                location:0.2,
+                                events:{
+                                    click:(e) => {
+                                        jsPlumbToolkit.consume(e.e)
+                                        toolkit.removeEdge(e.edge)
+                                    }
+                                }
+                            }
+                        }
+                    ],
                     // a large outlineWidth helps with selection via the mouse.
                     outlineWidth:10,
                     events: {
                         click:(p) => {
                             // on edge click, select the edge (the inspector will update to
-                            // show this edge), and start editing it
-                            toolkit.setSelection(p.edge)
-                            renderer.startEditingPath(p.edge, {
-                                deleteButton:true
-                            })
+                            // show this edge). note we check for default prevented, in case the user clicked the
+                            // delete overlay.
+                            if (!p.e.defaultPrevented) {
+                                toolkit.setSelection(p.edge)
+                            }
                         }
                     }
                 }
@@ -280,22 +305,16 @@ jsPlumbToolkit.ready(function() {
         propertyMappings:{
             edgeMappings:edgeMappings()
         },
-        // enable path editing
-        editablePaths:true,
-        // Layout the nodes using an absolute layout
-        layout: {
-            type: jsPlumbToolkit.AbsoluteLayout.type
-        },
+
         // Snap everything to a grid. This will be used for element dragging as well as resizing and also
         // by the palette that allows users to drag new nodes on to the canvas.
         grid:{
             size:GRID_SIZE
         },
         events: {
-            // on whitespace click, clear selected node/edge and stop editing any edges.
+            // on whitespace click, clear selected node/edge
             [jsPlumbToolkit.EVENT_CANVAS_CLICK]: (e) => {
                 toolkit.clearSelection()
-                renderer.stopEditingPath()
             }
         },
         useModelForSizes:true,
@@ -304,7 +323,7 @@ jsPlumbToolkit.ready(function() {
         // a selector identifying which parts of each node should not cause the element to be dragged.
         // typically here you'd list such things as buttons etc.
         dragOptions: {
-            filter: ".jtk-draw-handle, .node-action, .node-action i"
+            filter: ".node-action, .node-action i"
         },
         plugins:[
             // add a miniview plugin.
@@ -315,13 +334,7 @@ jsPlumbToolkit.ready(function() {
                 }
             },
             // this plugin allows the user to resize elements.
-            {
-                type:jsPlumbToolkit.DrawingToolsPlugin.type,
-                options:{
-                    widthAttribute:"width",
-                    heightAttribute:"height"
-                }
-            },
+            jsPlumbToolkit.DrawingToolsPlugin.type,
             // select multiple elements with a lasso
             {
                 type:jsPlumbToolkit.LassoPlugin.type,
@@ -334,8 +347,7 @@ jsPlumbToolkit.ready(function() {
             {
                 type:jsPlumbToolkit.BackgroundPlugin.type,
                 options:GRID_BACKGROUND_OPTIONS
-            },
-            jsPlumbToolkit.SnaplinesPlugin.type
+            }
         ],
         modelEvents:[
             // catch the TAP event on the delete buttons inside nodes and remove the node from the model.
@@ -394,7 +406,7 @@ jsPlumbToolkit.ready(function() {
         }
     })
 
-    new jsPlumbToolkit.ExportControlsComponent(document.querySelector(".jtk-export"), renderer, shapeLibrary, {
+    new jsPlumbToolkit.ExportControlsComponent(document.querySelector(".jtk-export"), renderer, {
         margins: {x: 50, y: 50},
         imageOptions:{
             dimensions:[

@@ -207,15 +207,15 @@ body {
 
 /* --------------------- edge styles ----------------------------------- */
 
-/*
-    style for the delete button. this is in fact supplied in the editable connectors css as a default but on our own site
-    the cascade conspires to elide the background color and foreground color. Without wanting to mark the style as `!important` in our defaults stylesheet,
-    we instead supply them again here.
- */
-.jtk-edge-delete {
-    background-color: orangered;
-    color:white;
+.jtk-flowchart-edge-delete {
+    font-size: 12px;
+    cursor: pointer;
 }
+
+.jtk-flowchart-edge-delete:hover {
+    fill:red;
+}
+
 /**
 Styles for a dashed edge.
  */
