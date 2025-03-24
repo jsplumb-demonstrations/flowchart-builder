@@ -6,18 +6,20 @@
 
         <jsplumb-surface [view]="view"
                          [renderParams]="renderParams"
-                         [toolkitParams]="toolkitParams"></jsplumb-surface>
+                         [toolkitParams]="toolkitParams"
+                         url="/assets/copyright.json"
+        ></jsplumb-surface>
 
-        <!--
-            A helper component that ships in the Toolkit since 6.2.0. Provides undo/redo, zoom to fit, etc.
-        -->
-        <jsplumb-controls></jsplumb-controls>
+        <div class="controls">
+            <!--
+                A helper component that provides undo/redo, zoom to fit, etc.
+            -->
+            <jsplumb-controls></jsplumb-controls>
 
-        <div class="jtk-export">
-            <span>Export:</span>
-            <a href="#" id="exportSvg" (click)="exportSVG()">SVG</a>
-            <a href="#" id="exportPng" (click)="exportPNG()">PNG</a>
-            <a href="#" id="exportJpg" (click)="exportJPG()">JPG</a>
+            <!--
+                Helper component that provides image/svg export (when you are using a ShapeLibrary)
+             -->
+            <jsplumb-export-controls [imageOptions]="imageExportOptions"></jsplumb-export-controls>
         </div>
 
         <!-- miniview -->
