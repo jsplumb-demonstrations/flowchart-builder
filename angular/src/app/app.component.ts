@@ -12,7 +12,6 @@ import {
   DrawingToolsPlugin,
   BackgroundPlugin,
   EVENT_TAP,
-  EdgePathEditor,
   Surface,
   DEFAULT,
   BlankEndpoint,
@@ -22,7 +21,7 @@ import {
   FLOWCHART_SHAPES,
     BASIC_SHAPES,
   ObjectAnchorSpec,
-    SelectionModes
+  SelectionModes
 } from '@jsplumbtoolkit/browser-ui';
 
 import edgeMappings from './edge-mappings';
@@ -45,6 +44,7 @@ export const anchorPositions: Array<ObjectAnchorSpec & {id: string}> = [
   {x:0.5, y:1, ox:0, oy:1, id:"bottom" }
 ]
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html'
@@ -55,9 +55,14 @@ export class AppComponent implements AfterViewInit {
 
   toolkit: BrowserUIAngular;
   surface: Surface;
-  edgeEditor: EdgePathEditor;
 
   initialShapeSet = FLOWCHART_SHAPES.id;
+
+  imageExportOptions = {
+    dimensions:[
+      { width:3000}, { width:1200}, {width:800}
+    ]
+  }
 
   toolkitParams = {
     // set the Toolkit's selection mode to 'isolated', meaning it can select a set of edges, or a set of nodes, but it
@@ -82,13 +87,10 @@ export class AppComponent implements AfterViewInit {
     nodes: {
       [DEFAULT]:{
         component:NodeComponent,
-        // target connections to this node can exist at any of the given anchorPositions
-        anchorPositions,
         // node can support any number of connections.
         maxConnections: -1,
         events: {
           [EVENT_TAP]: (params) => {
-            this.edgeEditor.stopEditing()
             // if zero nodes currently selected, or the shift key wasnt pressed, make this node the only one in the selection.
             if (this.toolkit.getSelection()._nodes.length < 1 || params.e.shiftKey !== true) {
               this.toolkit.setSelection(params.obj)
@@ -102,7 +104,6 @@ export class AppComponent implements AfterViewInit {
     },
     edges: {
       [DEFAULT]: {
-        endpoint: BlankEndpoint.type,
         connector: {
           type: OrthogonalConnector.type,
           options: {
@@ -118,9 +119,6 @@ export class AppComponent implements AfterViewInit {
         events: {
           [EVENT_CLICK]: (p) => {
             this.toolkit.setSelection(p.edge);
-            this.edgeEditor.startEditing(p.edge, {
-              deleteButton: true
-            });
           }
         }
       }
@@ -138,12 +136,11 @@ export class AppComponent implements AfterViewInit {
     events: {
       [EVENT_CANVAS_CLICK]: (e) => {
         this.toolkit.clearSelection()
-        this.edgeEditor.stopEditing()
       }
     },
     consumeRightClick: false,
     dragOptions: {
-      filter: ".jtk-draw-handle, .node-action, .node-action i"
+      filter: ".node-action, .node-action i"
     },
     plugins: [
         DrawingToolsPlugin.type,
@@ -159,7 +156,14 @@ export class AppComponent implements AfterViewInit {
       }
     ],
     useModelForSizes:true,
-    zoomToFit:true
+    zoomToFit:true,
+    defaults:{
+      edgesAvoidVertices:true
+    },
+    magnetize:{
+      constant:true,
+      trackback:true
+    }
   }
 
   constructor(public $jsplumb: jsPlumbService) {
@@ -171,11 +175,7 @@ export class AppComponent implements AfterViewInit {
 
     this.surface = this.surfaceComponent.surface
     this.toolkit = this.surfaceComponent.toolkit
-    this.edgeEditor = new EdgePathEditor(this.surface, { activeMode:true})
 
-    this.toolkit.load({
-      url: '/assets/copyright.json'
-    });
   }
 
   /**
@@ -189,29 +189,6 @@ export class AppComponent implements AfterViewInit {
       textColor: DEFAULT_TEXT_COLOR,
       outlineWidth: DEFAULT_OUTLINE_WIDTH
     };
-  }
-
-  exportSVG(): void {
-    // use the `showSvgExportUI` method to popup the exporter window. Note that we do not need to provide a shapeLibrary
-    // shapeLibraryId here, as the service will use a default shape library id if none is provided. We also did not provide an
-    // id when we registered the shape library above, meaning it was registered with the default id.
-    this.$jsplumb.showSvgExportUI({
-      surface: this.surface
-    });
-  }
-
-  exportPNG(): void {
-    // show an image export ui, which will default tp PNG.  `dimensions` is optional - if not supplied the resulting PNG
-    // will have the same size as the content.
-    this.$jsplumb.showImageExportUI({surface:this.surface, dimensions:[
-            { width:3000}, { width:1200}, {width:800}
-        ]})
-  }
-
-  exportJPG(): void {
-    // show an image export ui targetting a JPG output. Here we show an alternative to providing a list of dimensions - we just mandate the
-    // width we want for the output. Again, this is optional. You don't need to provide this or `dimensions`. See note above.
-    this.$jsplumb.showImageExportUI({surface:this.surface, type:"image/jpeg", width:3000})
   }
 
 
