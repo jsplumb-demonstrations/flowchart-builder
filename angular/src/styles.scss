@@ -1,7 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 @import "../node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit.css";
-@import "../node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit-connector-editors.css";
-@import "../node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit-controls.css";
 @import './app.css';
 
 
@@ -34,10 +32,19 @@ jsplumb-miniview {
   position:relative;
 }
 
-jsplumb-controls {
-  display:block;
+.controls {
+  z-index: 100;
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+  display:flex;
   position:absolute;
 }
+
+jsplumb-export-controls {
+  margin-left:1rem;
+}
+
 
 .zone {
   width:80px;
