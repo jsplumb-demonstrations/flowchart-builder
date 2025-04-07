@@ -1,6 +1,6 @@
 {
     "name": "flowchart-builder-angular",
-    "version": "7.0.0",
+    "version": "7.0.1",
     "scripts": {
         "ng": "ng",
         "start": "npx ng serve",
@@ -19,7 +19,7 @@
         "@angular/platform-browser": "^17.3.12",
         "@angular/platform-browser-dynamic": "^17.3.12",
         "@angular/router": "^17.3.12",
-        "@jsplumbtoolkit/browser-ui-angular": "^7.0.0",
+        "@jsplumbtoolkit/browser-ui-angular": "^7.0.1",
         "rxjs": "~6.5.5",
         "tslib": "^2.0.0",
         "zone.js": "~0.14.10"
