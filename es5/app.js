@@ -247,6 +247,7 @@ jsPlumbToolkit.ready(function() {
             },
             edges: {
                 [jsPlumbToolkit.DEFAULT]: {
+                    deleteButton:true, // show a delete button
                     // Our edge uses a Blank endpoint and an Orthogonal connector.
                     connector: {
                         type:jsPlumbToolkit.OrthogonalConnector.type,
@@ -266,21 +267,6 @@ jsPlumbToolkit.ready(function() {
                                 cssClass:CLASS_EDGE_LABEL,
                                 label:"{{label}}",
                                 location:0.5
-                            }
-                        },
-                        {
-                            type:jsPlumbToolkit.LabelOverlay.type,
-                            options:{
-                                useHTMLElement:false,
-                                label:"✖",
-                                cssClass:"jtk-flowchart-edge-delete",
-                                location:0.2,
-                                events:{
-                                    click:(e) => {
-                                        jsPlumbToolkit.consume(e.e)
-                                        toolkit.removeEdge(e.edge)
-                                    }
-                                }
                             }
                         }
                     ],
