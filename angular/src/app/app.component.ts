@@ -105,6 +105,7 @@ export class AppComponent implements AfterViewInit {
     },
     edges: {
       [DEFAULT]: {
+        deleteButton:true, // show a delete button
         connector: {
           type: OrthogonalConnector.type,
           options: {
@@ -130,21 +131,6 @@ export class AppComponent implements AfterViewInit {
               cssClass:CLASS_EDGE_LABEL,
               label:"{{label}}",
               location:0.5
-            }
-          },
-          {
-            type:LabelOverlay.type,
-            options:{
-              useHTMLElement:false,
-              label:"✖",
-              cssClass:"jtk-flowchart-edge-delete",
-              location:0.2,
-              events:{
-                click:(e) => {
-                  consume(e.e)
-                  this.toolkit.removeEdge(e.edge)
-                }
-              }
             }
           }
         ]

@@ -115,6 +115,7 @@
                     },
                     edges: {
                         [DEFAULT]: {
+                            deleteButton:true, // show a delete button
                             connector: {
                                 type:OrthogonalConnector.type,
                                 options:{
@@ -141,21 +142,6 @@
                                         cssClass:CLASS_EDGE_LABEL,
                                         label:"{{label}}",
                                         location:0.5
-                                    }
-                                },
-                                {
-                                    type:LabelOverlay.type,
-                                    options:{
-                                        useHTMLElement:false,
-                                        label:"✖",
-                                        cssClass:"jtk-flowchart-edge-delete",
-                                        location:0.2,
-                                        events:{
-                                            click:(e) => {
-                                                consume(e.e)
-                                                toolkit.removeEdge(e.edge)
-                                            }
-                                        }
                                     }
                                 }
                             ]

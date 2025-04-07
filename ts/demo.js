@@ -134,6 +134,7 @@ ready(() => {
             },
             edges: {
                 [DEFAULT]: {
+                    deleteButton:true, // show a delete button
                     // Our edge uses a Blank endpoint (which is the default) and an Orthogonal connector.
                     connector: {
                         type:OrthogonalConnector.type,
@@ -167,21 +168,6 @@ ready(() => {
                                 cssClass:CLASS_EDGE_LABEL,
                                 label:"{{label}}",
                                 location:0.5
-                            }
-                        },
-                        {
-                            type:LabelOverlay.type,
-                            options:{
-                                useHTMLElement:false,
-                                label:"✖",
-                                cssClass:"jtk-flowchart-edge-delete",
-                                location:0.2,
-                                events:{
-                                    click:(e) => {
-                                        consume(e.e)
-                                        toolkit.removeEdge(e.edge)
-                                    }
-                                }
                             }
                         }
                     ]
