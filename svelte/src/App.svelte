@@ -11,7 +11,6 @@ import { SurfaceComponent,
 
 import { DEFAULT, EVENT_TAP,
     EVENT_CANVAS_CLICK,
-  EVENT_DBL_CLICK,
   EVENT_CLICK,
     DrawingToolsPlugin,
     LassoPlugin,
@@ -24,14 +23,9 @@ import { DEFAULT, EVENT_TAP,
   SelectionModes
   } from "@jsplumbtoolkit/browser-ui"
 
-// import InspectorComponentNew from './lib/InspectorComponentNew.svelte'
 import NodeInspector from './lib/NodeInspector.svelte'
 import EdgeInspector from './lib/EdgeInspector.svelte'
 
-// import FlowchartInspectorComponent from './lib/FlowchartInspectorComponent.svelte'
-// import ShapeLibraryPaletteComponent from './lib/ShapeLibraryPaletteComponent.svelte'
-
-// import ExportControlsComponent from './lib/ExportControlsComponent.svelte'
 
 import NodeComponent from'./lib/NodeComponent.svelte'
 import edgeMappings from './edge-mappings'
@@ -78,7 +72,6 @@ import {
         maxConnections: -1,
         events: {
           [EVENT_TAP]: ({toolkit, renderer, e, obj}) => {
-            renderer.stopEditingPath()
             // if zero nodes currently selected, or the shift key wasnt pressed, make this node the only one in the selection.
             if (toolkit.getSelection()._nodes.length < 1 || e.shiftKey !== true) {
               toolkit.setSelection(obj)
@@ -94,6 +87,7 @@ import {
     // parent.
     edges: {
       [DEFAULT]: {
+        deleteButton:true, // show a delete button
         connector: {
           type: OrthogonalConnector.type,
           options: {
@@ -105,14 +99,8 @@ import {
         label:"{{label}}",
         outlineWidth:10,
         events: {
-          [EVENT_DBL_CLICK]: ({toolkit, renderer, edge}) => {
-            toolkit.removeEdge(edge)
-          },
           [EVENT_CLICK]: ({toolkit, renderer, edge}) => {
             toolkit.setSelection(edge)
-            renderer.startEditingPath(edge, {
-              deleteButton:true
-            })
           }
         }
       }
@@ -126,13 +114,11 @@ import {
     events: {
       [EVENT_CANVAS_CLICK]: (surface) => {
         surface.toolkitInstance.clearSelection()
-        surface.stopEditingPath()
       }
     },
     propertyMappings:{
       edgeMappings:edgeMappings()
     },
-    editablePaths:true,
     consumeRightClick: false,
     dragOptions: {
       filter: ".jtk-draw-handle, .node-action, .node-action i"
