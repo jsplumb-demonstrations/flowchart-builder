@@ -21,7 +21,7 @@ import {
     BASIC_SHAPES,
   ObjectAnchorSpec,
   SelectionModes,
-  LabelOverlay, consume
+  LabelOverlay
 } from '@jsplumbtoolkit/browser-ui';
 
 import edgeMappings from './edge-mappings';
