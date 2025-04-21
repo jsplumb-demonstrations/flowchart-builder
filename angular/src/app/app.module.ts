@@ -6,11 +6,11 @@ import { AppComponent } from './app.component';
 import { jsPlumbToolkitModule } from "@jsplumbtoolkit/browser-ui-angular"
 import {NodeComponent} from "./node.component"
 
-import {InspectorComponent} from "./inspector.component"
+import {FlowchartInspectorComponent} from "./inspector.component"
 
 @NgModule({
     declarations: [
-        AppComponent, NodeComponent, InspectorComponent
+        AppComponent, NodeComponent, FlowchartInspectorComponent
 
     ],
     imports: [
