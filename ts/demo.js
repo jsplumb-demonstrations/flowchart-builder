@@ -4,13 +4,11 @@ import {
     ready,
     uuid,
     OrthogonalConnector,
-    BlankEndpoint,
     DEFAULT, EVENT_TAP,
     LassoPlugin,
     DrawingToolsPlugin,
     MiniviewPlugin,
     EVENT_CANVAS_CLICK,
-    initializeOrthogonalConnectorEditors,
     BackgroundPlugin,
     SelectionModes,
     ShapeLibraryImpl, ShapeLibraryPalette,
@@ -36,10 +34,6 @@ import {
 } from "./constants";
 
 import {FlowchartBuilderInspector} from "./flowchart-inspector";
-
-
-// this call ensures that the esbuild does not tree-shake the orthogonal connector editors out.
-initializeOrthogonalConnectorEditors()
 
 const anchorPositions = [
     { x:0, y:0.5, ox:-1, oy:0, id:"left" },
