@@ -1,6 +1,5 @@
 @import "../../node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit.css";
-@import "../../node_modules/@jsplumbtoolkit/browser-ui/css/jsplumbtoolkit-demo-support.css";
-@import "./app.css";
+@import "./flowchart-builder.css";
 
 #app {
   width: 100vw;
@@ -8,3 +7,51 @@
   display: flex;
   position:relative;
 }
+
+
+
+body {
+  font-family: sans-serif;
+}
+
+.jtk-demo-main {
+  display: flex;
+  height: 100vh;
+}
+
+.jtk-demo-canvas {
+  background-color: white;
+  display: flex;
+  flex-grow: 1;
+  position: relative;
+  overflow: hidden !important;
+}
+
+.jtk-demo-rhs {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background-color: #f9f9f9;
+  flex: 0 0 250px;
+  padding: 20px 5px 0 5px;
+}
+
+.jtk-miniview {
+  position: absolute;
+  top: 25px;
+  right: 25px;
+  z-index: 100;
+}
+
+.jtk-controls {
+  top: 25px;
+  position: absolute;
+  left: 25px;
+  z-index: 1;
+}
+
+.jtk-export-controls {
+  top:auto;
+  bottom:25px;
+}
+

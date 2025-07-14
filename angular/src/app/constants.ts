@@ -53,3 +53,5 @@ export const GRID_BACKGROUND_OPTIONS = {
     showTickMarks:false,
     type:GeneratedGridBackground.type
 }
+
+export const LINE_WIDTHS = [1, 2, 5]

@@ -7,6 +7,7 @@ import {
 } from "@jsplumbtoolkit/browser-ui"
 
 import {
+    LINE_WIDTHS,
     PROPERTY_COLOR,
     PROPERTY_FILL,
     PROPERTY_LABEL,
@@ -26,36 +27,58 @@ export interface FlowchartInspectorOptions extends VanillaInspectorOptions {
 
 const inspectorTemplates = {
     [TMPL_NODE_INSPECTOR] : `
-            <div class="jtk-inspector jtk-node-inspector">
-                <div class="jtk-inspector-section">
+            <div class="jtk-flowchart-inspector">
+                <div class="jtk-flowchart-inspector-section">
                     <div>Text</div>
                     <input type="text" jtk-att="${PROPERTY_TEXT}" jtk-focus/>
                 </div>
                 
-                <div class="jtk-inspector-section">
+                <div class="jtk-flowchart-inspector-section">
                     <div>Fill</div>
-                    <input type="color" jtk-att="${PROPERTY_FILL}"/>
+                    <jtk-color jtk-att="${PROPERTY_FILL}"/>
                 </div>
                 
-                <div class="jtk-inspector-section">
+                <div class="jtk-flowchart-inspector-section">
                     <div>Color</div>
-                    <input type="color" jtk-att="${PROPERTY_TEXT_COLOR}"/>
+                    <jtk-color jtk-att="${PROPERTY_TEXT_COLOR}"/>
                 </div>
                 
-                <div class="jtk-inspector-section">
+                <div class="jtk-flowchart-inspector-section">
                     <div>Outline</div>
-                    <input type="color" jtk-att="${PROPERTY_OUTLINE}"/>
+                    <jtk-color jtk-att="${PROPERTY_OUTLINE}"/>
                 </div>
+                <div class="jtk-flowchart-inspector-section">
+                <div>Outline width</div>
+                <select jtk-att="outlineWidth" jtk-datatype="integer">
+                    <r-each in="$context.LINE_WIDTHS">
+                        <option value="{{$value}}">{{$data}}</option>
+                        </r-each>
+                </select>
+            </div>
                 
             </div>`,
     [TMPL_EDGE_INSPECTOR] : `
-            <div class="jtk-inspector jtk-edge-inspector">
+            <div class="jtk-flowchart-inspector">
+            <div class="jtk-flowchart-inspector-section">
                 <div>Label</div>
                 <input type="text" jtk-att="${PROPERTY_LABEL}"/>
+                </div>
+                <div class="jtk-flowchart-inspector-section">
                 <div>Line style</div>
                 <jtk-line-style value="{{lineStyle}}" jtk-att="${PROPERTY_LINE_STYLE}"></jtk-line-style>
+                </div>
+                <div class="jtk-flowchart-inspector-section">
                 <div>Color</div>
-                <input type="color" jtk-att="${PROPERTY_COLOR}"/>
+                <jtk-color jtk-att="${PROPERTY_COLOR}"/>
+                </div>
+                <div class="jtk-flowchart-inspector-section">
+                    <div>Line width</div>
+                    <select jtk-att="LineWidth" jtk-datatype="integer">
+                        <r-each in="$context.LINE_WIDTHS">
+                        <option value="{{$value}}">{{$data}}</option>
+                        </r-each>
+                    </select>
+                </div>
             </div>`
 }
 
@@ -73,6 +96,9 @@ export class FlowchartBuilderInspector extends VanillaInspector {
                 } else if (isEdge(obj)) {
                     return inspectorTemplates[TMPL_EDGE_INSPECTOR]
                 }
+            },
+            context:{
+                LINE_WIDTHS
             }
         }))
 

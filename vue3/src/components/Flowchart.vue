@@ -26,7 +26,7 @@
 
     } from "@jsplumbtoolkit/browser-ui"
 
-    import { loadSurface, DEFAULT_VUE_SURFACE_ID } from "@jsplumbtoolkit/browser-ui-vue3"
+    import { loadSurface } from "@jsplumbtoolkit/browser-ui-vue3"
 
     import {
         CLASS_EDGE_LABEL,
@@ -54,19 +54,13 @@
     ]
 
     export default defineComponent({
-        name:"flowchart",
+        //name:"flowchart",
         components:{ InspectorComponent },
         mounted() {
-
-            loadSurface(DEFAULT_VUE_SURFACE_ID, (s) => {
+            loadSurface((s) => {
                 surface = s;
                 toolkit = surface.toolkitInstance;
-
-                window.tk = toolkit
-
             })
-
-
         },
         methods:{
             toolkitParams:function() {
@@ -115,7 +109,7 @@
                     },
                     edges: {
                         [DEFAULT]: {
-                            deleteButton:true, // show a delete button
+                            deleteButton:"hover", // show a delete button, on hover (or always on a touch device)
                             connector: {
                                 type:OrthogonalConnector.type,
                                 options:{
@@ -186,11 +180,9 @@
                     ],
                     zoomToFit:true,
                     defaults:{
-                        edgesAvoidVertices:true
-                    },
-                    magnetize:{
-                        constant:true,
-                        trackback:true
+                        edgesAvoidVertices:true,
+                        paintConnectorOutline: true,
+                        connectorOutlineWidth: 30
                     }
                 }
             }
@@ -222,8 +214,7 @@
             <SurfaceComponent :renderOptions="this.renderParams()"
                              :viewOptions="this.viewParams()"
                              :toolkitOptions="this.toolkitParams()"
-                             url="copyright.json">
-            </SurfaceComponent>
+                             url="copyright.json"/>
 
             <ControlsComponent/>
             <MiniviewComponent/>
@@ -237,13 +228,7 @@
             </div>
 
             <!-- node/edge inspector -->
-            <InspectorComponent v-bind:edge-mappings="edgeMappings"/>
-
-            <div class="description">
-                <p>
-                    This sample application is a builder for flowcharts.
-                </p>
-            </div>
+            <InspectorComponent :edge-mappings="edgeMappings"/>
         </div>
     </div>
 </template>

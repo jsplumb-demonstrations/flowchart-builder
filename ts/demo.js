@@ -102,11 +102,11 @@ ready(() => {
                 [DEFAULT]:{
                     // We have a single node type, which renders a div and uses the `jtk-shape` tag to inject appropriate SVG into
                     // the DOM element.  The `jtk-shape` tag is made available because we attach a `ShapeLibraryPalette` further down
-                    // in the code here (see https://docs.jsplumbtoolkit.com/toolkit/6.x/shape-libraries).
+                    // in the code here (see https://docs.jsplumbtoolkit.com/toolkit/7.x/shape-libraries).
                     // In this template we render a div for each value in the `anchorPositions` array, and these elements
                     // act as connection drag sources. We use CSS to position them, but we also write out various
                     // `data-jtk-anchor-...` properties to control their anchor positions.
-                    template:`<div style="color:{{#textColor}}" class="flowchart-object flowchart-{{type}}" data-jtk-target="true">
+                    template:`<div style="color:{{#textColor}}" class="jtk-flowchart-object" data-jtk-target="true">
                             <jtk-shape/> 
                             ${anchorPositions.map(ap => `<div class="jtk-connect jtk-connect-${ap.id}"  data-jtk-anchor-x="${ap.x}" data-jtk-anchor-y="${ap.y}" data-jtk-orientation-x="${ap.ox}"  data-jtk-orientation-y="${ap.oy}" data-jtk-source="true"></div>`).join("\n")}
                             <div class="node-delete node-action delete"/>
@@ -128,7 +128,7 @@ ready(() => {
             },
             edges: {
                 [DEFAULT]: {
-                    deleteButton:true, // show a delete button
+                    deleteButton:"hover", // show a delete button
                     // Our edge uses a Blank endpoint (which is the default) and an Orthogonal connector.
                     connector: {
                         type:OrthogonalConnector.type,
@@ -275,6 +275,7 @@ ready(() => {
         }
     })
 
+    window.s = renderer
 
 
 })

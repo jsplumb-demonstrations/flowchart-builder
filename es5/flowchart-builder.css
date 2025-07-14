@@ -21,240 +21,79 @@
     --flowchartBuilderPaletteBorder:var(--jtk-component-outline);
 }
 
-body {
-    font-family: sans-serif;
+/* --------------------------- canvas styles -------------------- */
+
+.jtk-background-grid-major {
+    stroke:#ddd;
 }
 
-.jtk-demo-main {
-    display: flex;
-    height: 100vh;
-}
+/* --------------------------- / canvas styles -------------------- */
 
-.jtk-demo-canvas {
-    background-color: white;
-    display: flex;
-    flex-grow: 1;
-    position: relative;
-    overflow: hidden !important;
-}
-
-.jtk-demo-rhs {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    background-color: #f9f9f9;
-    flex: 0 0 250px;
-    padding: 20px 5px 0 5px;
-}
-
-.node-palette {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.jtk-miniview {
-    position: absolute;
-    top: 25px;
-    right: 25px;
-    z-index: 100;
-}
-
-.jtk-demo-main .description {
-    font-size: 13px;
-    padding: 13px;
-}
-
-.jtk-demo-main .description ul {
-    margin: 0;
-    padding: 0 0 0 20px;
-}
-
-.jtk-demo-main .description li {
-    list-style-type: disc !important;
-    margin: 3px 0;
-}
-
-.jtk-controls {
-    top: 25px;
-    position: absolute;
-    left: 25px;
-    z-index: 1;
-}
-
-.jtk-export-controls {
-    top:auto;
-    bottom:25px;
-}
-
-
-/* ----------------------- drag/drop interactions -------------- */
-.drop-hover {
-    background-color: #FCCCCC !important;
-}
-
-/* ----------------------- node styles ------------------------- */
-
+/* ----------------------- Node styles ------------------------- */
 
 .jtk-surface-selected-element {
     border:none !important;
 }
 
-.flowchart-object {
+.jtk-flowchart-object {
     z-index: 11;
     border: none;
     overflow: visible;
-    display:flex;
     align-items: center;
     justify-content: center;
     background-color:transparent;
-    height:100%;
 }
 
-.flowchart-object svg {
-    position: absolute;
-    left: 0;
-    top: 0;
-    overflow:visible;
-}
 
-.flowchart-object span {
-    font-family: sans-serif;
-    font-size: 1rem;
-    font-weight: 400;
-    z-index:12;
-    white-space: nowrap;
-}
-
-.flowchart-object .node-action {
+.jtk-flowchart-object .node-action {
     display: none;
     position: absolute;
-    top: -1rem;
+    top: -1.5rem;
     cursor: pointer;
     z-index: 12;
     left: auto;
-    color:white;
     transition:transform 0.1s;
     font-family: sans-serif;
     text-align: center;
     opacity:0.9;
+}
+
+.jtk-flowchart-object .node-action:hover {
+    transform: scale(1.5, 1.5);
+}
+
+.jtk-surface-selected-element .node-action {
+    display: flex;
+
 
 }
 
-.flowchart-object .node-action:hover {
-    transform: scale(1.3, 1.3);
+.jtk-flowchart-node-delete {
+    color: var(--jtk-edge-delete-handle-bg);
+    background-color:white;
+    right:0.25rem;
 }
 
-.flowchart-object .node-delete {
-    right: -3px;
-    background-color: var(--jtk-draw-handle-background);
+.jtk-flowchart-node-delete:before {
+    content: "✖";
 }
 
-.flowchart-object.jtk-surface-selected-element .node-action {
-    display: block;
-    width: 15px;
-    height: 15px;
-    top: -20px;
-    cursor: pointer;
-    line-height: 17px;
-    border-radius: 50%;
-    font-size: smaller;
+.jtk-flowchart-node-clone {
+    background-color: var(--jtk-edge-delete-handle-bg);
+    width:1rem;
+    height:1rem;
+    right:1.5rem;
+    --svg:url("data:image/svg+xml,%3Csvg viewBox='0 0 50 50'  xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='black' stroke-width='4' d='M 10,10 h15 q5,0 5,5 v25 q0,5 -5,5 h-15 q-5,0 -5,-5 v-25 q0,-5 5,-5' fill='none'/%3E%3Cpath  stroke='black' stroke-width='4' d='M 15,10 q0,-5 5,-5 h15 q5,0 5,5 v25 q0,5 -5,5 h-5' fill='none'/%3E%3C/svg%3E ");
+    /* old Chrome, still requires prefix in 2022 */
+    -webkit-mask: var(--svg);
+    /* current chrome, Firefox and Safari */
+    mask: var(--svg);
 }
 
-.flowchart-object .connect {
-    position:absolute;
-    left:50%;
-    margin-left:-7.5px;
-    background-color:rgb(132, 172, 179);
-    transition:transform 0.1s;
-}
-
-.flowchart-object .connect:hover {
-    transform: scale(1.2, 1.2);
-    opacity:1;
-}
-
-.flowchart-object .delete:after {
-    content:"x";
-    text-transform: uppercase;
-}
-
-.flowchart-object .node-edit:after {
+.jtk-flowchart-object .node-edit:after {
     content:"✎";
     text-transform: uppercase;
 }
-
-.connection-drop svg {
-    fill:#CCC;
-}
-
-.connection-drop text {
-    fill:black;
-}
-
-/* --------------------------- overlays --------------------------------- */
-
-
-.jtk-label-overlay {
-    background-color:white;
-    padding:2px;
-    border-radius:5px;
-    z-index:10;
-}
-
-/* --------------------------- / overlays --------------------------------- */
-
-
-/* --------------------- edge styles ----------------------------------- */
-
-.jtk-flowchart-edge-delete {
-    font-size: 12px;
-    cursor: pointer;
-}
-
-.jtk-flowchart-edge-delete:hover {
-    fill:red;
-}
-
-/**
-Styles for a dashed edge.
- */
-.jtk-flowchart-dashed-edge path {
-    stroke-dasharray: 2 4;
-}
-
-/* styles for drag + drop */
-
-.jtk-surface.jtk-drag-drop-active {
-    outline:6px dotted #4ea758 !important;
-}
-
-.jtk-surface.jtk-drag-drop-hover {
-    outline: 6px solid #f7a45d !important;
-}
-
-svg.jtk-drag-drop-hover, svg.jtk-drag-drop-active {
-    outline:none !important;
-}
-
-svg.jtk-drag-drop-active path {
-    stroke:#4ea758;
-    stroke-width:3px;
-    stroke-dasharray:2 0 2 5;
-}
-
-svg.jtk-drag-drop-hover path {
-    stroke:#f7a45d;
-    stroke-width:4px;
-    stroke-dasharray:0;
-}
-
-.jtk-drag-drop-current {
-    outline:2px solid pink;
-}
-
-
-
 
 /*
   The small discs from which the user can drag new connections. TODO not scoped to flowchart really.
@@ -306,8 +145,48 @@ svg.jtk-drag-drop-hover path {
     display: flex;
 }
 
+/* --------------------------- / nodes --------------------------------- */
+
+/* --------------------------- overlays --------------------------------- */
+
+
+.jtk-label-overlay {
+    background-color:white;
+    padding:2px;
+    border-radius:5px;
+    z-index:10;
+}
+
+/* --------------------------- / overlays --------------------------------- */
+
+
+/* --------------------- edge styles ----------------------------------- */
+
+.jtk-flowchart-edge-delete {
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.jtk-flowchart-edge-delete:hover {
+    fill:red;
+}
+
 /**
-    Hide connect elements if an edge is currently being dragged
+Styles for a dashed edge.
+ */
+.jtk-flowchart-dashed-edge path {
+    stroke-dasharray: 2 4;
+}
+
+/**
+    When editing a path, show its anchor placeholder on top of any connect elements.
+ */
+.jtk-anchor-placeholder {
+    z-index:13;
+}
+
+/**
+  Hide connect elements if an edge is currently being dragged
  */
 .jtk-surface-edge-dragging .jtk-connect {
     display:none !important;
@@ -322,12 +201,16 @@ svg.jtk-drag-drop-hover path {
 }
 
 /**
-    When editing a path, show its anchor placeholder on top of any connect elements.
+Highlight an edge when it is selected
  */
-.jtk-anchor-placeholder {
-    z-index:2;
+svg.jtk-surface-selected-connection {
+    outline: 4px dashed var(--jtk-draw-handle-background);
+    background-color: #0503;
 }
 
+/* --------------------- / edge styles ----------------------------------- */
+
+/* ----------------- drag/drop new shapes -------------------------------- */
 
 /*
  * A group of shapes.
@@ -335,6 +218,7 @@ svg.jtk-drag-drop-hover path {
 .jtk-shape-library-palette-set {
     display:flex;
     flex-wrap:wrap;
+    margin:1rem;
 }
 
 /*
@@ -355,7 +239,7 @@ svg.jtk-drag-drop-hover path {
 * in the palette, not when they are being dragged.
  */
 .jtk-shape-library-palette-set .jtk-shape-library-palette-shape {
-    width: 4rem;
+    width: 2.5rem;
     margin: 0.5rem;
 }
 
@@ -389,58 +273,86 @@ Applied to the drop down that lets the user pick their current shape set.
     margin: 3px;
 }
 
-.jtk-background-grid-major {
-    stroke:#ddd;
-}
-
-/* ---------------------------------------------------------------------------------------------- */
-/* --------------------------- selected vertices ------------------------------ */
-/* ---------------------------------------------------------------------------------------------- */
-
-
-.jtk-anchor-placeholder {
-    z-index:13;
-}
+/* ----------------- / drag/drop new shapes -------------------------------- */
 
 /* ------------------ INSPECTOR ------------------------------------------------- */
 
-.jtk-inspector {
+.jtk-flowchart-inspector {
     display:flex;
     flex-direction: column;
-    padding:1rem;
+    padding:0.25rem;
     background-color: #e7e7e7;
     margin: 5px;
 }
 
-.jtk-inspector input {
-    width:100%;
+.jtk-flowchart-inspector-section {
+    margin:5px;
+    display:flex;
+    flex-direction:column;
+    padding:3px;
+    background-color: #ffffff78;
+    border-radius: 3px;
+}
+
+.jtk-flowchart-inspector input {
+    width:95%;
     height: 1.5rem;
     margin:5px 0;
 }
 
-.jtk-edge-type-picker {
+.jtk-flowchart-inspector .jtk-edge-type-picker {
     display:flex;
     flex-direction:column;
     flex-grow:1;
 }
 
-.jtk-edge-type-picker > div {
+.jtk-flowchart-inspector .jtk-edge-type-picker > div {
     margin:5px 0;
     height:1.5rem;
     width:100%;
     position:relative;
 }
 
-.jtk-edge-type-picker > div > div {
+.jtk-flowchart-inspector .jtk-edge-type-picker > div > div {
     top:5px;
     bottom:5px;
     position:absolute;
 }
 
-.jtk-edge-type-picker > svg {
+.jtk-flowchart-inspector .jtk-edge-type-picker > svg {
     z-index:1;
 }
 
-.jtk-edge-type-picker-selected {
+.jtk-flowchart-inspector .jtk-edge-type-picker-selected {
     background-color:white;
+}
+
+.jtk-flowchart-inspector .jtk-edge-type-picker [data-value]:after {
+    position: absolute;
+    top:0;
+    left: 50%;
+    transform: translate(-50%,0);
+    font-size: 11px;
+    color: gray;
+    content:attr(data-value);
+}
+
+.jtk-flowchart-inspector .jtk-edge-type-picker [data-value='sourceArrow']:after {
+    content: "Source Arrow";
+}
+
+.jtk-flowchart-inspector .jtk-edge-type-picker [data-value='targetArrow']:after {
+    content: "Target Arrow";
+}
+
+.jtk-flowchart-inspector .jtk-edge-type-picker [data-value='bothArrows']:after {
+    content: "Both Arrows";
+}
+
+.jtk-flowchart-inspector .jtk-edge-type-picker [data-value='dashed']:after {
+    content: "Dashed Line";
+}
+
+.jtk-flowchart-inspector .jtk-edge-type-picker [data-value='plain']:after {
+    content: "Plain";
 }

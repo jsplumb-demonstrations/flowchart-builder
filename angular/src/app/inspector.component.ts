@@ -4,6 +4,7 @@ import {
 import {InspectorComponent} from "@jsplumbtoolkit/browser-ui-angular"
 import {Edge, Node} from "@jsplumbtoolkit/browser-ui"
 import edgeMappings from './edge-mappings'
+import {LINE_WIDTHS} from "./constants"
 
 /**
  * Inspector for the flowchart.  This component extends JsPlumb Angular's `InspectorComponent` Directive, which is a render-agnostic manager
@@ -25,29 +26,60 @@ import edgeMappings from './edge-mappings'
     template: `<div class="inspector">
         
         @if(currentObjectType === EDGE) {
-            <div class="jtk-inspector jtk-edge-inspector">
-                <div>Label</div>
-                <input type="text" jtk-att="label"/>
-                <div>Line style</div>
-                <jtk-edge-type [edgeMappings]="edgeMappings" propertyName="lineStyle" [inspector]="inspector"></jtk-edge-type>
-                <div>Color</div>
-                <input type="color" jtk-att="color"/>
+            <div class="jtk-flowchart-inspector">
+                <div class="jtk-flowchart-inspector-section">
+                    <div>Label</div>
+                    <input type="text" jtk-att="label"/>
+                </div>
+                <div class="jtk-flowchart-inspector-section">    
+                    <div>Line style</div>
+                    <jtk-edge-type [edgeMappings]="edgeMappings" propertyName="lineStyle" [inspector]="inspector"></jtk-edge-type>
+                </div>
+                <div class="jtk-flowchart-inspector-section">    
+                    <div>Color</div>
+                    <jtk-color [inspector]="inspector" propertyName="color"/>
+                </div>
+                <div class="jtk-flowchart-inspector-section">    
+                    <div>Line width</div>
+                    <select jtk-att="lineWidth" jtk-datatype="integer">
+                        @for(lw of LINE_WIDTHS;track lw) {
+		                    <option [value]="lw">{{lw}}</option>
+		                }
+                    </select>
+                </div>    
             </div>
         }    
         
         @if(currentObjectType === NODE) {
-            <div class="jtk-inspector jtk-node-inspector">
-                <div>Text</div>
-                <input type="text" jtk-att="text" jtk-focus/>
+            <div class="jtk-flowchart-inspector">               
+                <div class="jtk-flowchart-inspector-section">
+                    <div>Text</div>
+                    <input type="text" jtk-att="text" jtk-focus/>
+                </div>    
     
-                <div>Fill</div>
-                <input type="color" jtk-att="fill"/>
+                <div class="jtk-flowchart-inspector-section">
+                    <div>Fill</div>
+                    <jtk-color [inspector]="inspector" propertyName="fill"/>
+                </div>
     
-                <div>Color</div>
-                <input type="color" jtk-att="textColor"/>
+                <div class="jtk-flowchart-inspector-section">
+                    <div>Color</div>
+                    <jtk-color [inspector]="inspector" propertyName="textColor"/>
+                </div>    
     
-                <div>Outline</div>
-                <input type="color" jtk-att="outline"/>
+                <div class="jtk-flowchart-inspector-section">
+                    <div>Outline</div>
+                    <jtk-color [inspector]="inspector" propertyName="outline"/>
+                </div>
+                
+                <div class="jtk-flowchart-inspector-section">    
+                    <div>Outline width</div>
+                    <select jtk-att="outlineWidth" jtk-datatype="integer">
+                        @for(lw of LINE_WIDTHS;track lw) {
+		                    <option [value]="lw">{{lw}}</option>
+                        }
+                    </select>
+                </div>    
             </div>
         }    
     </div>`,
@@ -57,5 +89,6 @@ export class FlowchartInspectorComponent extends InspectorComponent {
     edgeMappings = edgeMappings();
     EDGE = Edge.objectType
     NODE = Node.objectType
+    LINE_WIDTHS = LINE_WIDTHS
 
 }

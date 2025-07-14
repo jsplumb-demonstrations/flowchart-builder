@@ -11,7 +11,7 @@ import {
 } from "@jsplumbtoolkit/browser-ui-react";
 
 import { DEFAULT, EVENT_CLICK, EVENT_TAP,
-    BlankEndpoint, OrthogonalConnector,
+    OrthogonalConnector,
     BackgroundPlugin, LassoPlugin, DrawingToolsPlugin,
     EVENT_CANVAS_CLICK,
     ShapeLibraryImpl,
@@ -31,7 +31,9 @@ import {
     CLASS_FLOWCHART_EDGE,
     GRID_BACKGROUND_OPTIONS,
     GRID_SIZE,
-    EDGE_TYPE_TARGET_ARROW, PROPERTY_COLOR, PROPERTY_LABEL, PROPERTY_LINE_STYLE
+    EDGE_TYPE_TARGET_ARROW,
+    PROPERTY_COLOR, PROPERTY_LABEL, PROPERTY_LINE_STYLE,
+    DEFAULT_OUTLINE_WIDTH
 } from "./constants";
 
 import edgeMappings from "./edge-mappings"
@@ -64,7 +66,8 @@ export default function FlowchartComponent() {
         return {
             fill:DEFAULT_FILL,
             outline:DEFAULT_STROKE,
-            textColor:DEFAULT_TEXT_COLOR
+            textColor:DEFAULT_TEXT_COLOR,
+            outlineWidth:DEFAULT_OUTLINE_WIDTH
         }
     }
 
@@ -110,11 +113,9 @@ export default function FlowchartComponent() {
                 }
             }
         },
-        // There are two edge types defined - 'yes' and 'no', sharing a common
-        // parent.
         edges: {
             [DEFAULT]: {
-                deleteButton:true, // show a delete button
+                deleteButton:"hover", // show a delete button, on hover
                 connector: {
                     type: OrthogonalConnector.type,
                     options: {
@@ -181,23 +182,15 @@ export default function FlowchartComponent() {
         zoomToFit:true,
         defaults:{
             edgesAvoidVertices:true
-        },
-        magnetize:{
-            constant:true,
-            trackback:true
         }
     }
 
-    // set a couple of refs and load data on "mount"
+    // set a couple of refs
     useEffect(() => {
 
         if (!initialized.current) {
             initialized.current = true
-
             surface.current = surfaceComponent.current.getSurface()
-
-            // load an initial dataset
-            toolkit.current.load({url:"/copyright.json"})
         }
 
     }, [])
@@ -205,7 +198,9 @@ export default function FlowchartComponent() {
     return  <div style={{width:"100%",height:"100%",display:"flex"}}>
 <div className="jtk-demo-canvas">
         <SurfaceProvider>
-            <SurfaceComponent shapeLibrary={shapeLibrary} renderOptions={renderParams} toolkit={toolkit.current} viewOptions={view} ref={ surfaceComponent }>
+            <SurfaceComponent shapeLibrary={shapeLibrary}
+            renderOptions={renderParams} toolkit={toolkit.current} viewOptions={view}
+            ref={ surfaceComponent } url="/copyright.json">
                 <ControlsComponent/>
                 <ExportControlsComponent/>
                 <MiniviewComponent/>

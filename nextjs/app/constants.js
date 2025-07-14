@@ -34,6 +34,12 @@ export const DEFAULT_STROKE = "#000000"
  */
 export const DEFAULT_TEXT_COLOR = "#000000"
 
+/**
+ * default vertex outline width
+ * @type {number}
+ */
+export const DEFAULT_OUTLINE_WIDTH = 2
+
 export const GRID_SIZE = {
     w:50,
     h:50
@@ -51,3 +57,5 @@ export const GRID_BACKGROUND_OPTIONS = {
     showTickMarks:false,
     type:GeneratedGridBackground.type
 }
+
+export const LINE_WIDTHS = [1, 2, 5]

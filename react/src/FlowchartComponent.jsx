@@ -116,7 +116,7 @@ export default function FlowchartComponent() {
         // parent.
         edges: {
             [DEFAULT]: {
-                deleteButton:true, // show a delete button
+                deleteButton:"hover", // show a delete button, on hover (or always on a touch device)
                 connector: {
                     type: OrthogonalConnector.type,
                     options: {
@@ -184,11 +184,9 @@ export default function FlowchartComponent() {
         // on load, zoom the dataset so its all visible
         zoomToFit:true,
         defaults:{
-           edgesAvoidVertices:true
-        },
-        magnetize:{
-            constant:true,
-            trackback:true
+            edgesAvoidVertices:true,
+            paintConnectorOutline: true,
+            connectorOutlineWidth: 30
         }
     }
 
@@ -202,10 +200,10 @@ export default function FlowchartComponent() {
             ;(window.s) = surface.current
 
             // load an initial dataset (we load this directly in the SurfaceComponent but you can do it this way)
-            toolkit.current.load({
-                url:"/copyright.json",
-                //onload:() => setTimeout(() => surface.current.repaintEverything(), 250)
-            })
+            // toolkit.current.load({
+            //     url:"/copyright.json",
+            //     onload:() => setTimeout(() => surface.current.repaintEverything(), 250)
+            // })
         }
 
     }, [])
@@ -219,7 +217,7 @@ export default function FlowchartComponent() {
                                           toolkit={toolkit.current}
                                           viewOptions={view}
                                           ref={ surfaceComponent }
-                                          purl="/copyright.json">
+                                          url="/copyright.json">
 
                             <ControlsComponent/>
                             <ExportControlsComponent/>

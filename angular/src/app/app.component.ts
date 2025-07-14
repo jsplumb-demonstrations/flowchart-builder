@@ -4,7 +4,7 @@ import {
   AngularRenderOptions,
   jsPlumbService,
   SurfaceComponent,
-  BrowserUIAngular
+  BrowserUIAngular, AngularViewOptions
 } from "@jsplumbtoolkit/browser-ui-angular"
 
 import {
@@ -21,7 +21,8 @@ import {
     BASIC_SHAPES,
   ObjectAnchorSpec,
   SelectionModes,
-  LabelOverlay
+  LabelOverlay,
+  UiStatesPlugin
 } from '@jsplumbtoolkit/browser-ui';
 
 import edgeMappings from './edge-mappings';
@@ -65,6 +66,11 @@ export class AppComponent implements AfterViewInit {
     ]
   }
 
+  /**
+   * Stores settings such as color history.
+   */
+  flowchartContext = {}
+
   toolkitParams = {
     // set the Toolkit's selection mode to 'isolated', meaning it can select a set of edges, or a set of nodes, but it
     // cannot select a set of nodes and edges. In this demonstration we use an inspector that responds to events from the
@@ -105,7 +111,7 @@ export class AppComponent implements AfterViewInit {
     },
     edges: {
       [DEFAULT]: {
-        deleteButton:true, // show a delete button
+        deleteButton:"hover", // show a delete button, on hover (or always on a touch device)
         connector: {
           type: OrthogonalConnector.type,
           options: {
@@ -157,6 +163,7 @@ export class AppComponent implements AfterViewInit {
     },
     plugins: [
         DrawingToolsPlugin.type,
+        UiStatesPlugin.type,
       {
         type:LassoPlugin.type,
         options: {
@@ -171,11 +178,9 @@ export class AppComponent implements AfterViewInit {
     useModelForSizes:true,
     zoomToFit:true,
     defaults:{
-      edgesAvoidVertices:true
-    },
-    magnetize:{
-      constant:true,
-      trackback:true
+      edgesAvoidVertices:true,
+      paintConnectorOutline: true,
+      connectorOutlineWidth: 30
     }
   }
 
@@ -188,6 +193,8 @@ export class AppComponent implements AfterViewInit {
 
     this.surface = this.surfaceComponent.surface
     this.toolkit = this.surfaceComponent.toolkit
+
+    ;(window as any).s = this.surface
 
   }
 

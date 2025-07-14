@@ -4,127 +4,135 @@
       "id": "2",
       "type": "decision",
       "text": "Is it in the public domain?",
-      "left": -300,
-      "top": -550,
-      "width": 300,
-      "height": 300,
-      "fill": "#FFFFFF",
-      "outline": "#000000"
+      "left": -250,
+      "top": -500,
+      "width": 200,
+      "height": 200,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff"
     },
     {
       "id": "3",
       "type": "decision",
       "text": "Is it Creative Commons?",
-      "left": 250,
-      "top": -600,
-      "width": 300,
-      "height": 300,
-      "fill": "#FFFFFF",
-      "outline": "#000000"
+      "left": 150,
+      "top": -650,
+      "width": 200,
+      "height": 200,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff"
     },
     {
       "id": "4",
       "type": "decision",
       "text": "Is it available from the publisher?",
-      "left": 1000,
-      "top": -600,
-      "width": 300,
-      "height": 300,
-      "fill": "#FFFFFF",
-      "outline": "#000000"
+      "left": 600,
+      "top": -650,
+      "width": 200,
+      "height": 200,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff"
     },
     {
       "id": "5",
       "type": "decision",
       "text": "Can it be linked online?",
-      "left": 950,
-      "top": -100,
-      "width": 300,
-      "height": 300,
-      "fill": "#FFFFFF",
-      "outline": "#000000"
+      "left": 600,
+      "top": -350,
+      "width": 200,
+      "height": 200,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff"
     },
     {
       "id": "6",
       "type": "process",
       "text": "Provide link to material",
-      "left": 450,
-      "top": -50,
-      "width": 300,
-      "height": 200,
-      "fill": "#ffffff",
-      "outline": "#000000"
+      "left": 350,
+      "top": -300,
+      "width": 150,
+      "height": 100,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff"
     },
     {
       "id": "7",
       "type": "process",
       "text": "Send request to IPO for usage permission",
-      "left": 950,
-      "top": 350,
-      "width": 300,
-      "height": 200,
-      "fill": "#FFFFFF",
-      "outline": "#000000"
+      "left": 600,
+      "top": -50,
+      "width": 200,
+      "height": 100,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff"
     },
     {
       "id": "8",
       "type": "process",
       "text": "Review license and comply with terms",
-      "left": -50,
-      "top": 0,
-      "width": 300,
-      "height": 200,
-      "fill": "#FFFFFF",
-      "outline": "#000000"
+      "left": 50,
+      "top": -150,
+      "width": 200,
+      "height": 100,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff"
     },
     {
       "id": "9",
       "type": "decision",
       "text": "Can IPO identify the rights holder?",
-      "left": 350,
-      "top": 450,
-      "width": 300,
-      "height": 300,
-      "fill": "#FFFFFF",
-      "outline": "#000000"
+      "left": 250,
+      "top": 150,
+      "width": 200,
+      "height": 150,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff"
     },
     {
       "id": "10",
       "type": "terminus",
       "text": "Copyright cleared",
-      "left": -500,
-      "top": 300,
-      "width": 300,
-      "height": 200,
-      "fill": "#23A030",
-      "outline": "#000000",
+      "left": -250,
+      "top": 50,
+      "width": 200,
+      "height": 100,
+      "fill": "#0da518",
+      "outline": "#ffffff",
       "textColor": "#ffffff"
     },
     {
-      "left": 1250,
-      "top": 600,
+      "left": 1050,
+      "top": -300,
       "fill": "#ff0000",
-      "outline": "#000000",
+      "outline": "#ffffff",
       "textColor": "#ffffff",
       "outlineWidth": 2,
       "type": "terminus",
       "category": "flowchart",
-      "width": 300,
-      "height": 200,
+      "width": 200,
+      "height": 100,
       "id": "ce9ef1fc-96fa-4b92-a670-f45d21737b5e",
       "text": "Copyright Not Cleared"
     },
     {
-      "left": -300,
-      "top": -850,
-      "fill": "#FFFFFF",
-      "outline": "#000000",
-      "textColor": "#000000",
+      "left": -250,
+      "top": -750,
+      "fill": "#3196aa",
+      "outline": "#ffffff",
+      "textColor": "#ffffff",
       "outlineWidth": 2,
       "type": "terminus",
       "category": "flowchart",
-      "width": 300,
-      "height": 200,
+      "width": 200,
+      "height": 100,
       "id": "c4529372-e187-459d-b1ab-f756b373b511",
       "text": "Select Material"
     }
@@ -137,8 +145,8 @@
         "label": "YES",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "93ee8bbc-4d69-44f9-b860-3359076f6d23"
+        "id": "93ee8bbc-4d69-44f9-b860-3359076f6d23",
+        "lineWidth": 5
       }
     },
     {
@@ -148,8 +156,8 @@
         "label": "NO",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "2a615cd8-daf8-4986-846e-6b1cb546c7c0"
+        "id": "2a615cd8-daf8-4986-846e-6b1cb546c7c0",
+        "lineWidth": 2
       }
     },
     {
@@ -159,8 +167,8 @@
         "label": "NO",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "f4f27407-0023-4234-a497-cec1fa123b88"
+        "id": "f4f27407-0023-4234-a497-cec1fa123b88",
+        "lineWidth": 2
       }
     },
     {
@@ -170,8 +178,8 @@
         "label": "YES",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "168442f8-d407-45e8-a497-59c219b505a7"
+        "id": "168442f8-d407-45e8-a497-59c219b505a7",
+        "lineWidth": 2
       }
     },
     {
@@ -181,8 +189,8 @@
         "label": "NO",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "f67ebbd0-d355-447d-b85f-d0519319c0e6"
+        "id": "f67ebbd0-d355-447d-b85f-d0519319c0e6",
+        "lineWidth": 2
       }
     },
     {
@@ -192,8 +200,8 @@
         "label": "YES",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "089d4272-bf33-44a9-8718-75df2baf47e0"
+        "id": "089d4272-bf33-44a9-8718-75df2baf47e0",
+        "lineWidth": 2
       }
     },
     {
@@ -203,8 +211,8 @@
         "label": "YES",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "9ab49c8f-6048-4e6c-8311-3202b26bebb7"
+        "id": "9ab49c8f-6048-4e6c-8311-3202b26bebb7",
+        "lineWidth": 2
       }
     },
     {
@@ -214,8 +222,8 @@
         "label": "NO",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "777c40f5-df26-4f07-85f6-f8f1347a8dec"
+        "id": "777c40f5-df26-4f07-85f6-f8f1347a8dec",
+        "lineWidth": 2
       }
     },
     {
@@ -225,8 +233,8 @@
         "label": "",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "898221ec-5d0d-49f9-ae23-bf825b0f7fd5"
+        "id": "898221ec-5d0d-49f9-ae23-bf825b0f7fd5",
+        "lineWidth": 2
       }
     },
     {
@@ -236,8 +244,8 @@
         "label": "",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "d4b2e0d7-48e2-4809-93ec-b1f4069627fe"
+        "id": "d4b2e0d7-48e2-4809-93ec-b1f4069627fe",
+        "lineWidth": 2
       }
     },
     {
@@ -247,8 +255,8 @@
         "label": "",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "57e90330-0258-48e4-8528-6bb7f6db9ba8"
+        "id": "57e90330-0258-48e4-8528-6bb7f6db9ba8",
+        "lineWidth": 2
       }
     },
     {
@@ -258,8 +266,8 @@
         "label": "NO",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "1cba4abc-ea10-4962-94ed-39141f5ceb79"
+        "id": "1cba4abc-ea10-4962-94ed-39141f5ceb79",
+        "lineWidth": 2
       }
     },
     {
@@ -269,8 +277,8 @@
         "label": "YES",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "f0c99334-72bb-4e05-a86d-c3a5edc3d557"
+        "id": "f0c99334-72bb-4e05-a86d-c3a5edc3d557",
+        "lineWidth": 2
       }
     },
     {
@@ -280,8 +288,8 @@
         "label": "",
         "color": "#000000",
         "lineStyle": "targetArrow",
-        "type": " default lineStyle_targetArrow",
-        "id": "61894410-943c-4f84-9e6e-d19beee28d68"
+        "id": "61894410-943c-4f84-9e6e-d19beee28d68",
+        "lineWidth": 2
       }
     }
   ]
