@@ -15,7 +15,7 @@
 
 </script>
 
-<div style="color:{data.textColor}" class="flowchart-object" data-jtk-target="true">
+<div style="color:{data.textColor}" class="jtk-flowchart-object" data-jtk-target="true">
 
     <ShapeComponent surface={surface} vertex={vertex} data={data} showLabels="true" labelProperty="text"/>
 

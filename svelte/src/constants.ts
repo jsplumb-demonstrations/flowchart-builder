@@ -65,3 +65,5 @@ export const anchorPositions = [
 {x:0.5, y:0, ox:0, oy:-1, id:"top" },
 {x:0.5, y:1, ox:0, oy:1, id:"bottom" }
 ]
+
+export const LINE_WIDTHS = [1, 2, 5]
