@@ -93,10 +93,6 @@ ready(() => {
             showLabels:true,
             labelAttribute:"text"
         },
-        magnetize:{
-            constant:true,
-            trackback:true
-        },
         view: {
             nodes: {
                 [DEFAULT]:{
@@ -109,7 +105,8 @@ ready(() => {
                     template:`<div style="color:{{#textColor}}" class="jtk-flowchart-object" data-jtk-target="true">
                             <jtk-shape/> 
                             ${anchorPositions.map(ap => `<div class="jtk-connect jtk-connect-${ap.id}"  data-jtk-anchor-x="${ap.x}" data-jtk-anchor-y="${ap.y}" data-jtk-orientation-x="${ap.ox}"  data-jtk-orientation-y="${ap.oy}" data-jtk-source="true"></div>`).join("\n")}
-                            <div class="node-delete node-action delete"/>
+                            <div class="jtk-flowchart-node-clone node-action"/>
+                            <div class="jtk-flowchart-node-delete node-action"/>
                         </div>`,
                     // node can support any number of connections.
                     maxConnections: -1,
@@ -225,9 +222,16 @@ ready(() => {
             // catch the TAP event on the delete buttons inside nodes and remove the node from the model.
             {
                 event:EVENT_TAP,
-                selector:".node-delete",
+                selector:".jtk-flowchart-node-delete",
                 callback:(event, eventTarget, info) => {
                     toolkit.removeNode(info.obj)
+                }
+            },
+            {
+                event:EVENT_TAP,
+                selector:".jtk-flowchart-node-clone",
+                callback:(event, eventTarget, info) => {
+                    renderer.cloneVertex(info.obj, {selectAfterCreate:true})
                 }
             }
         ]
