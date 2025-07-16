@@ -198,12 +198,6 @@ export default function FlowchartComponent() {
             surface.current = surfaceComponent.current.getSurface()
 
             ;(window.s) = surface.current
-
-            // load an initial dataset (we load this directly in the SurfaceComponent but you can do it this way)
-            // toolkit.current.load({
-            //     url:"/copyright.json",
-            //     onload:() => setTimeout(() => surface.current.repaintEverything(), 250)
-            // })
         }
 
     }, [])
@@ -220,7 +214,7 @@ export default function FlowchartComponent() {
                                           url="/copyright.json">
 
                             <ControlsComponent/>
-                            <ExportControlsComponent/>
+                            <ExportControlsComponent labelProperty="text"/>
                             <MiniviewComponent/>
                         </SurfaceComponent>
 

@@ -7,32 +7,29 @@
         <jsplumb-surface [view]="view"
                          [renderParams]="renderParams"
                          [toolkitParams]="toolkitParams"
-                         url="/assets/copyright.json"
-        ></jsplumb-surface>
+                         url="/assets/copyright.json"/>
 
         <div class="controls">
             <!--
                 A helper component that provides undo/redo, zoom to fit, etc.
             -->
-            <jsplumb-controls></jsplumb-controls>
+            <jsplumb-controls/>
 
             <!--
                 Helper component that provides image/svg export (when you are using a ShapeLibrary)
              -->
-            <jsplumb-export-controls [imageOptions]="imageExportOptions"></jsplumb-export-controls>
+            <jsplumb-export-controls [imageOptions]="imageExportOptions" labelProperty="text"/>
         </div>
 
-        <!-- miniview -->
-        <jsplumb-miniview></jsplumb-miniview>
+        <jsplumb-miniview/>
     </div>
     <div class="jtk-demo-rhs">
         <!-- the node palette -->
         <div class="sidebar node-palette">
-            <jtk-shape-palette [dataGenerator]="dataGenerator" [initialSet]="initialShapeSet"></jtk-shape-palette>
+            <jtk-shape-palette [dataGenerator]="dataGenerator" [initialSet]="initialShapeSet"/>
         </div>
         <!-- node/edge inspector -->
-        <app-inspector [context]="flowchartContext">
-        </app-inspector>
+        <app-inspector [context]="flowchartContext"/>
 
     </div>
 </div>

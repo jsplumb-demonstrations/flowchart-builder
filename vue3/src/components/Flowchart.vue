@@ -207,7 +207,7 @@
 <template>
     <div id="app">
 
-        <ExportControlsComponent/>
+        <ExportControlsComponent labelProperty="text"/>
 
         <div class="jtk-demo-canvas">
 

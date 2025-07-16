@@ -424,6 +424,7 @@ jsPlumbToolkit.ready(function() {
             dimensions:[
                 { width:3000}, { width:1200}, {width:800}
             ]
-        }
+        },
+        labelProperty:"text"
     })
 })

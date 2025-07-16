@@ -242,7 +242,8 @@ ready(() => {
             dimensions: [
                 {width: 3000}, {width: 1200}, {width: 800}
             ]
-        }
+        },
+        labelProperty:"text"
     })
 
     // the palette displays a list of shapes that can be dragged on to the canvas

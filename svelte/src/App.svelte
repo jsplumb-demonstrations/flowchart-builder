@@ -87,7 +87,7 @@ import {
     // parent.
     edges: {
       [DEFAULT]: {
-        deleteButton:true, // show a delete button
+        deleteButton:"hover", // show a delete button on hover
         connector: {
           type: OrthogonalConnector.type,
           options: {
@@ -174,7 +174,7 @@ import {
                         url="/copyright.json">
 
         <ControlsComponent/>
-        <ExportControlsComponent/>
+        <ExportControlsComponent labelProperty="text"/>
         <MiniviewComponent/>
       </SurfaceComponent>
 

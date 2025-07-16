@@ -202,7 +202,7 @@ export default function FlowchartComponent() {
             renderOptions={renderParams} toolkit={toolkit.current} viewOptions={view}
             ref={ surfaceComponent } url="/copyright.json">
                 <ControlsComponent/>
-                <ExportControlsComponent/>
+                <ExportControlsComponent labelProperty="text"/>
                 <MiniviewComponent/>
             </SurfaceComponent>
 
