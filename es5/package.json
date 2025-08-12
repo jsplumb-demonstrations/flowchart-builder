@@ -1,6 +1,6 @@
 {
     "name": "flowchart-builder-es5",
-    "version": "7.3.1",
+    "version": "7.3.3",
     "description": "",
     "scripts": {
         "serve": "./node_modules/.bin/http-server ."
@@ -16,7 +16,7 @@
     },
     "homepage": "https://github.com/jsplumb/jsplumbtoolkit-applications#readme",
     "dependencies": {
-        "@jsplumbtoolkit/browser-ui": "^7.3.1"
+        "@jsplumbtoolkit/browser-ui": "^7.3.3"
     },
     "devDependencies": {
         "http-server": "^14.1.1"
